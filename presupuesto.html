@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedir Presupuesto | Local Web</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="presupuesto.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar scrolled">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-total">Local</span><span class="logo-web">Web</span>
+      </a>
+      <a href="index.html" class="btn-ghost" style="padding:8px 18px;font-size:.9rem">← Volver al inicio</a>
+    </div>
+  </header>
+
+  <main class="presup-main">
+    <div class="container">
+
+      <!-- HEADER -->
+      <div class="presup-header">
+        <span class="section-tag">Sin compromiso · Respuesta en 24hs</span>
+        <h1>Pedí tu <span class="gradient-text">presupuesto gratis</span></h1>
+        <p>Completá el formulario y te enviamos un presupuesto detallado por WhatsApp y email.</p>
+      </div>
+
+      <!-- STEPS INDICATOR -->
+      <div class="steps-bar">
+        <div class="step-dot active" id="dot1"><span>1</span><label>Servicio</label></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot2"><span>2</span><label>Detalles</label></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot3"><span>3</span><label>Contacto</label></div>
+      </div>
+
+      <!-- FORM WRAPPER -->
+      <div class="form-wrapper">
+
+        <!-- PASO 1: ELEGIR SERVICIO -->
+        <div class="step-panel active" id="step1">
+          <h2>¿Qué servicio necesitás?</h2>
+          <p class="step-desc">Seleccioná el servicio que mejor se adapta a tu proyecto</p>
+          <div class="service-selector">
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="web-comercio" />
+              <div class="serv-inner">
+                <span class="serv-icon">🌐</span>
+                <strong>Página Web Comercio</strong>
+                <span>Sitio para tu negocio, tienda o empresa</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="inmobiliaria" />
+              <div class="serv-inner">
+                <span class="serv-icon">🏠</span>
+                <strong>Inmobiliaria</strong>
+                <span>Catálogo de propiedades, filtros y mapas</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="app-movil" />
+              <div class="serv-inner">
+                <span class="serv-icon">📱</span>
+                <strong>App Móvil</strong>
+                <span>Aplicación para Android e iOS</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="sistema" />
+              <div class="serv-inner">
+                <span class="serv-icon">⚙️</span>
+                <strong>Sistema Administrativo</strong>
+                <span>Stock, facturación, empleados, clientes</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="publicidad" />
+              <div class="serv-inner">
+                <span class="serv-icon">📣</span>
+                <strong>Publicidad en Redes</strong>
+                <span>Facebook Ads, Instagram Ads, Google Ads</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="community" />
+              <div class="serv-inner">
+                <span class="serv-icon">👥</span>
+                <strong>Community Manager</strong>
+                <span>Gestión de redes sociales y contenido</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="hosting-juegos" />
+              <div class="serv-inner">
+                <span class="serv-icon">🎮</span>
+                <strong>Hosting Servidor de Juegos</strong>
+                <span>Minecraft, FiveM, Rust, CS2 y más</span>
+              </div>
+            </label>
+            <label class="serv-card">
+              <input type="radio" name="servicio" value="web-medida" />
+              <div class="serv-inner">
+                <span class="serv-icon">✨</span>
+                <strong>Web a Medida</strong>
+                <span>Proyecto personalizado o no sé aún</span>
+              </div>
+            </label>
+          </div>
+          <div class="step-error hidden" id="err-servicio">Por favor seleccioná un servicio.</div>
+          <div class="step-actions">
+            <button class="btn-primary" onclick="goStep(2)">Siguiente →</button>
+          </div>
+        </div>
+
+        <!-- PASO 2: DETALLES DEL PROYECTO -->
+        <div class="step-panel" id="step2">
+          <h2>Contanos sobre tu proyecto</h2>
+          <p class="step-desc">Cuanta más info nos des, más preciso será el presupuesto</p>
+
+          <!-- Web Comercio -->
+          <div class="detail-block hidden" id="det-web-comercio">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿Qué tipo de negocio tenés?</label>
+                <input type="text" id="tipo-negocio" placeholder="Panadería, ropa, consultorio, etc." />
+              </div>
+              <div class="form-group">
+                <label>¿Cuántas páginas/secciones?</label>
+                <select id="cant-paginas">
+                  <option value="">Seleccioná...</option>
+                  <option>1 página (landing)</option>
+                  <option>3-5 páginas (inicio, servicios, contacto...)</option>
+                  <option>+5 páginas</option>
+                  <option>No sé aún</option>
+                </select>
+              </div>
+            </div>
+            <div class="check-group">
+              <label>¿Qué funciones necesitás?</label>
+              <div class="checks">
+                <label class="chk"><input type="checkbox" value="tienda" /> 🛒 Tienda online / carrito</label>
+                <label class="chk"><input type="checkbox" value="catalogo" /> 📦 Catálogo de productos</label>
+                <label class="chk"><input type="checkbox" value="turnos" /> 📅 Reservas / turnos online</label>
+                <label class="chk"><input type="checkbox" value="blog" /> ✍️ Blog / noticias</label>
+                <label class="chk"><input type="checkbox" value="galeria" /> 🖼️ Galería de fotos</label>
+                <label class="chk"><input type="checkbox" value="multiidioma" /> 🌍 Multi-idioma</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inmobiliaria -->
+          <div class="detail-block hidden" id="det-inmobiliaria">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre de la inmobiliaria</label>
+                <input type="text" id="nombre-inmo" placeholder="Inmobiliaria Sur, etc." />
+              </div>
+              <div class="form-group">
+                <label>¿Cuántas propiedades publicarías?</label>
+                <select id="cant-props">
+                  <option value="">Seleccioná...</option>
+                  <option>Menos de 20</option>
+                  <option>20 a 100</option>
+                  <option>100 a 500</option>
+                  <option>+500</option>
+                </select>
+              </div>
+            </div>
+            <div class="check-group">
+              <label>¿Qué funciones necesitás?</label>
+              <div class="checks">
+                <label class="chk"><input type="checkbox" value="mapa" /> 🗺️ Mapa interactivo</label>
+                <label class="chk"><input type="checkbox" value="filtros" /> 🔍 Filtros por tipo/zona/precio</label>
+                <label class="chk"><input type="checkbox" value="tasacion" /> 📊 Formulario de tasación</label>
+                <label class="chk"><input type="checkbox" value="panel" /> 🔐 Panel para cargar propiedades</label>
+                <label class="chk"><input type="checkbox" value="whatsapp-prop" /> 💬 Consulta por WhatsApp</label>
+                <label class="chk"><input type="checkbox" value="portales" /> 🔗 Integración portales (Zonaprop, etc.)</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- App Móvil -->
+          <div class="detail-block hidden" id="det-app-movil">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿Para qué plataforma?</label>
+                <select id="plataforma-app">
+                  <option value="">Seleccioná...</option>
+                  <option>Solo Android</option>
+                  <option>Solo iOS (iPhone)</option>
+                  <option>Android + iOS</option>
+                  <option>No sé aún</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Qué hace la app?</label>
+                <input type="text" id="funcion-app" placeholder="Pedidos, turnos, delivery, etc." />
+              </div>
+            </div>
+            <div class="check-group">
+              <label>¿Qué funciones incluye?</label>
+              <div class="checks">
+                <label class="chk"><input type="checkbox" value="login" /> 🔐 Login de usuarios</label>
+                <label class="chk"><input type="checkbox" value="pagos-app" /> 💳 Pagos in-app</label>
+                <label class="chk"><input type="checkbox" value="push" /> 🔔 Notificaciones push</label>
+                <label class="chk"><input type="checkbox" value="gps" /> 📍 Geolocalización / GPS</label>
+                <label class="chk"><input type="checkbox" value="camara" /> 📷 Cámara / fotos</label>
+                <label class="chk"><input type="checkbox" value="chat-app" /> 💬 Chat interno</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sistema -->
+          <div class="detail-block hidden" id="det-sistema">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿Qué tipo de sistema necesitás?</label>
+                <select id="tipo-sistema">
+                  <option value="">Seleccioná...</option>
+                  <option>Stock e inventario</option>
+                  <option>Facturación / ventas</option>
+                  <option>Gestión de empleados / RRHH</option>
+                  <option>CRM (gestión de clientes)</option>
+                  <option>Turnos y reservas</option>
+                  <option>Sistema completo integral</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Cuántos usuarios lo usarían?</label>
+                <select id="cant-usuarios">
+                  <option value="">Seleccioná...</option>
+                  <option>1 usuario (solo yo)</option>
+                  <option>2 a 5 usuarios</option>
+                  <option>6 a 20 usuarios</option>
+                  <option>+20 usuarios</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Publicidad -->
+          <div class="detail-block hidden" id="det-publicidad">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿En qué redes querés anunciarte?</label>
+                <div class="checks" style="margin-top:8px">
+                  <label class="chk"><input type="checkbox" value="fb-ads" /> Facebook Ads</label>
+                  <label class="chk"><input type="checkbox" value="ig-ads" /> Instagram Ads</label>
+                  <label class="chk"><input type="checkbox" value="google-ads" /> Google Ads</label>
+                  <label class="chk"><input type="checkbox" value="tiktok-ads" /> TikTok Ads</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Presupuesto mensual para anuncios</label>
+                <select id="budget-ads">
+                  <option value="">Seleccioná...</option>
+                  <option>Hasta $50.000 ARS/mes</option>
+                  <option>$50.000 - $150.000 ARS/mes</option>
+                  <option>$150.000 - $500.000 ARS/mes</option>
+                  <option>+$500.000 ARS/mes</option>
+                  <option>No sé aún</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community -->
+          <div class="detail-block hidden" id="det-community">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿Qué redes sociales tenés?</label>
+                <div class="checks" style="margin-top:8px">
+                  <label class="chk"><input type="checkbox" value="ig-cm" /> Instagram</label>
+                  <label class="chk"><input type="checkbox" value="fb-cm" /> Facebook</label>
+                  <label class="chk"><input type="checkbox" value="tiktok-cm" /> TikTok</label>
+                  <label class="chk"><input type="checkbox" value="linkedin-cm" /> LinkedIn</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>¿Cuántos posteos por semana?</label>
+                <select id="posteos">
+                  <option value="">Seleccioná...</option>
+                  <option>1 a 3 por semana</option>
+                  <option>4 a 7 por semana</option>
+                  <option>Diario</option>
+                  <option>No sé aún</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hosting Juegos -->
+          <div class="detail-block hidden" id="det-hosting-juegos">
+            <div class="form-row">
+              <div class="form-group">
+                <label>¿Qué juego?</label>
+                <select id="juego">
+                  <option value="">Seleccioná...</option>
+                  <option>Minecraft Java</option>
+                  <option>Minecraft Bedrock</option>
+                  <option>FiveM (GTA V)</option>
+                  <option>RedM (RDR2)</option>
+                  <option>Rust</option>
+                  <option>ARK: Survival</option>
+                  <option>Counter-Strike 2</option>
+                  <option>Valheim</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Cuántos jugadores simultáneos?</label>
+                <select id="jugadores">
+                  <option value="">Seleccioná...</option>
+                  <option>Hasta 10 jugadores</option>
+                  <option>10 a 50 jugadores</option>
+                  <option>50 a 200 jugadores</option>
+                  <option>+200 jugadores</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Web a Medida -->
+          <div class="detail-block hidden" id="det-web-medida">
+            <div class="form-group">
+              <label>Describí tu idea o proyecto</label>
+              <textarea rows="4" id="idea-medida" placeholder="Tengo una idea de... / Necesito un sistema que haga... / No sé bien qué necesito pero..."></textarea>
+            </div>
+          </div>
+
+          <!-- Campo descripción adicional (siempre visible) -->
+          <div class="form-group" style="margin-top:20px">
+            <label>Descripción adicional / detalle extra <span style="color:var(--text-muted)">(opcional)</span></label>
+            <textarea id="descripcion" rows="3" placeholder="Cualquier otro detalle que quieras contarnos..."></textarea>
+          </div>
+
+          <!-- Plan / urgencia -->
+          <div class="form-row" style="margin-top:8px">
+            <div class="form-group">
+              <label>¿Cuándo lo necesitás?</label>
+              <select id="urgencia">
+                <option value="">Seleccioná...</option>
+                <option>Lo antes posible</option>
+                <option>En el próximo mes</option>
+                <option>En 2 a 3 meses</option>
+                <option>Estoy evaluando opciones</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Presupuesto estimado</label>
+              <select id="presupuesto-est">
+                <option value="">Seleccioná...</option>
+                <option>Hasta $100.000 ARS</option>
+                <option>$100.000 – $300.000 ARS</option>
+                <option>$300.000 – $700.000 ARS</option>
+                <option>+$700.000 ARS</option>
+                <option>No sé / necesito orientación</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-ghost" onclick="goStep(1)">← Atrás</button>
+            <button class="btn-primary" onclick="goStep(3)">Siguiente →</button>
+          </div>
+        </div>
+
+        <!-- PASO 3: DATOS DE CONTACTO -->
+        <div class="step-panel" id="step3">
+          <h2>¿A quién le enviamos el presupuesto?</h2>
+          <p class="step-desc">Usamos tus datos solo para responderte. No enviamos spam.</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre y apellido *</label>
+              <input type="text" id="nombre" placeholder="Juan García" />
+              <span class="form-error" id="err-nombre"></span>
+            </div>
+            <div class="form-group">
+              <label>Empresa / Negocio <span style="color:var(--text-muted)">(opcional)</span></label>
+              <input type="text" id="empresa" placeholder="Panadería El Sol" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>WhatsApp / Teléfono *</label>
+              <input type="tel" id="telefono" placeholder="+54 9 11 1234-5678" />
+              <span class="form-error" id="err-telefono"></span>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" id="email" placeholder="juan@ejemplo.com" />
+              <span class="form-error" id="err-email"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Localidad / Ciudad</label>
+            <input type="text" id="localidad" placeholder="Neuquén, Buenos Aires, etc." />
+          </div>
+
+          <!-- Cómo querés recibir el presupuesto -->
+          <div class="form-group">
+            <label>¿Cómo preferís que te contactemos?</label>
+            <div class="checks" style="margin-top:8px;flex-direction:row;flex-wrap:wrap;gap:12px">
+              <label class="chk"><input type="checkbox" id="via-wa" checked /> 📱 WhatsApp</label>
+              <label class="chk"><input type="checkbox" id="via-email" checked /> ✉️ Email</label>
+              <label class="chk"><input type="checkbox" id="via-llamada" /> 📞 Llamada telefónica</label>
+            </div>
+          </div>
+
+          <div class="step-error hidden" id="err-contacto"></div>
+
+          <div class="step-actions">
+            <button class="btn-ghost" onclick="goStep(2)">← Atrás</button>
+            <button class="btn-primary btn-submit-presup" id="btnEnviar" onclick="enviarPresupuesto()">
+              <span id="btnEnviarText">Enviar presupuesto</span>
+              <span id="btnEnviarSpinner" class="hidden">⏳</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ÉXITO -->
+        <div class="step-panel success-panel" id="stepSuccess">
+          <div class="success-icon">🎉</div>
+          <h2>¡Presupuesto enviado!</h2>
+          <p>Recibimos tu consulta. Te respondemos en menos de <strong>24 horas</strong> por WhatsApp y email.</p>
+          <div class="success-actions">
+            <a href="https://wa.me/5492954320639" target="_blank" class="btn-primary">Hablar por WhatsApp ahora</a>
+            <a href="index.html" class="btn-ghost">Volver al inicio</a>
+          </div>
+        </div>
+
+      </div><!-- /form-wrapper -->
+    </div>
+  </main>
+
+  <!-- WhatsApp flotante -->
+  <a href="https://wa.me/5492954320639?text=Hola%20Local%20Web%2C%20quiero%20consultar%20sobre%20sus%20servicios"
+     target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="presupuesto.js"></script>
+</body>
+</html>

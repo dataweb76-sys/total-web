@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responder Presupuesto | Local Web Admin</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="presupuesto.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="logo" style="margin-bottom:24px;font-size:2rem">
+        <span class="logo-total">Local</span><span class="logo-web">Web</span>
+      </div>
+      <h2>Panel Admin</h2>
+      <p style="color:var(--text-muted);margin-bottom:24px;font-size:.9rem">Acceso restringido</p>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkLogin()" />
+        <span class="form-error" id="loginErr"></span>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:8px" onclick="checkLogin()">Ingresar</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" class="hidden">
+
+    <header class="navbar scrolled">
+      <div class="container nav-inner">
+        <a href="index.html" class="logo">
+          <span class="logo-total">Local</span><span class="logo-web">Web</span>
+          <span style="font-size:.7rem;color:var(--text-muted);margin-left:8px;font-weight:500">ADMIN</span>
+        </a>
+        <div style="display:flex;gap:12px;align-items:center">
+          <a href="presupuesto.html" target="_blank" class="btn-ghost" style="padding:8px 16px;font-size:.85rem">Ver form público</a>
+          <button onclick="logout()" class="btn-ghost" style="padding:8px 16px;font-size:.85rem">Cerrar sesión</button>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding-top:80px;min-height:100vh;background:var(--bg)">
+      <div class="container" style="padding-top:40px;padding-bottom:80px">
+
+        <div class="presup-header">
+          <h1>Panel de <span class="gradient-text">Presupuestos</span></h1>
+          <p>Calculá el costo real y respondé al cliente con un presupuesto profesional</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="showTab('calculadora')">🧮 Calculadora de costos</button>
+          <button class="tab-btn" onclick="showTab('responder')">✉️ Armar respuesta</button>
+          <button class="tab-btn" onclick="showTab('costos-fijos')">📊 Costos fijos</button>
+        </div>
+
+        <!-- TAB: CALCULADORA -->
+        <div class="tab-panel active" id="tab-calculadora">
+          <div class="admin-grid">
+
+            <div class="admin-card">
+              <h3>🎯 Datos del cliente</h3>
+              <div class="form-group">
+                <label>Nombre del cliente</label>
+                <input type="text" id="c-nombre" placeholder="Juan García" />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="c-email" placeholder="juan@ejemplo.com" />
+              </div>
+              <div class="form-group">
+                <label>WhatsApp</label>
+                <input type="tel" id="c-telefono" placeholder="+54 9 11 1234-5678" />
+              </div>
+              <div class="form-group">
+                <label>Servicio solicitado</label>
+                <select id="c-servicio" onchange="calcular()">
+                  <option value="">Seleccioná...</option>
+                  <option value="web-comercio">Página Web Comercio</option>
+                  <option value="inmobiliaria">Inmobiliaria</option>
+                  <option value="app-movil">App Móvil</option>
+                  <option value="sistema">Sistema Administrativo</option>
+                  <option value="publicidad">Publicidad en Redes</option>
+                  <option value="community">Community Manager</option>
+                  <option value="hosting-juegos">Hosting Servidor de Juegos</option>
+                  <option value="web-medida">Web a Medida</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Complejidad del proyecto</label>
+                <select id="c-complejidad" onchange="calcular()">
+                  <option value="basico">Básico (sin funciones extras)</option>
+                  <option value="intermedio" selected>Intermedio (algunas funciones)</option>
+                  <option value="avanzado">Avanzado (sistema complejo)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Incluye dominio? (.ar o .com.ar)</label>
+                <select id="c-dominio" onchange="calcular()">
+                  <option value="no">No incluye</option>
+                  <option value="ar">Sí — .ar (~$3.500/año)</option>
+                  <option value="com-ar">Sí — .com.ar (~$2.500/año)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Incluye hosting?</label>
+                <select id="c-hosting" onchange="calcular()">
+                  <option value="no">No incluye</option>
+                  <option value="vercel-free">Vercel gratis (suficiente para la mayoría)</option>
+                  <option value="vercel-pro">Vercel Pro (~$20 USD/mes)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>¿Incluye Supabase (base de datos)?</label>
+                <select id="c-supabase" onchange="calcular()">
+                  <option value="no">No requiere</option>
+                  <option value="free">Supabase gratis</option>
+                  <option value="pro">Supabase Pro (~$25 USD/mes)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Meses de soporte incluidos</label>
+                <select id="c-soporte" onchange="calcular()">
+                  <option value="0">Sin soporte</option>
+                  <option value="1">1 mes</option>
+                  <option value="3" selected>3 meses</option>
+                  <option value="6">6 meses</option>
+                  <option value="12">12 meses</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Descuento (%)</label>
+                <input type="number" id="c-descuento" value="0" min="0" max="50" oninput="calcular()" />
+              </div>
+            </div>
+
+            <!-- RESULTADO -->
+            <div class="admin-card resultado-card">
+              <h3>💰 Resultado del presupuesto</h3>
+              <div id="resultado-body">
+                <p style="color:var(--text-muted);text-align:center;padding:40px 0">Seleccioná un servicio para ver el presupuesto estimado</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB: RESPONDER -->
+        <div class="tab-panel" id="tab-responder">
+          <div class="admin-card" style="max-width:800px;margin:0 auto">
+            <h3>✉️ Armar respuesta al cliente</h3>
+            <p style="color:var(--text-muted);margin-bottom:24px;font-size:.9rem">Completá los datos del cliente y el presupuesto calculado para generar el mensaje.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre del cliente</label>
+                <input type="text" id="r-nombre" placeholder="Juan" />
+              </div>
+              <div class="form-group">
+                <label>Servicio</label>
+                <input type="text" id="r-servicio" placeholder="Página Web Comercio" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Precio de creación</label>
+                <input type="text" id="r-precio" placeholder="$250.000" />
+              </div>
+              <div class="form-group">
+                <label>Costo mensual (hosting/mantenimiento)</label>
+                <input type="text" id="r-mensual" placeholder="$15.000 / mes" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>¿Qué incluye?</label>
+              <textarea id="r-incluye" rows="3" placeholder="✅ Diseño responsive&#10;✅ Panel de administración&#10;✅ SEO básico&#10;✅ 3 meses de soporte"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Plazo de entrega</label>
+              <input type="text" id="r-plazo" placeholder="7 días hábiles" />
+            </div>
+            <div class="form-group">
+              <label>Observaciones adicionales</label>
+              <textarea id="r-obs" rows="2" placeholder="Cualquier detalle extra del presupuesto..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="generarMensaje()" style="margin-bottom:20px">Generar mensaje →</button>
+
+            <div id="mensaje-generado" class="hidden">
+              <h4 style="margin-bottom:12px">Mensaje generado:</h4>
+              <div class="mensaje-preview" id="preview-texto"></div>
+              <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+                <button class="btn-primary" onclick="enviarWA()">📱 Enviar por WhatsApp</button>
+                <button class="btn-ghost" onclick="enviarEmail()">✉️ Abrir en Email</button>
+                <button class="btn-ghost" onclick="copiarMensaje()">📋 Copiar texto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: COSTOS FIJOS -->
+        <div class="tab-panel" id="tab-costos-fijos">
+          <div class="costos-grid">
+
+            <div class="admin-card">
+              <h3>🏗️ Costos de infraestructura</h3>
+              <table class="costos-table">
+                <thead><tr><th>Servicio</th><th>Plan</th><th>Costo</th></tr></thead>
+                <tbody>
+                  <tr><td>Vercel</td><td>Hobby (gratis)</td><td class="green">$0</td></tr>
+                  <tr><td>Vercel</td><td>Pro</td><td>~$20 USD/mes</td></tr>
+                  <tr><td>Supabase</td><td>Free</td><td class="green">$0</td></tr>
+                  <tr><td>Supabase</td><td>Pro</td><td>~$25 USD/mes</td></tr>
+                  <tr><td>GitHub</td><td>Free</td><td class="green">$0</td></tr>
+                  <tr><td>GitHub</td><td>Pro</td><td>~$4 USD/mes</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="admin-card">
+              <h3>🌐 Costos de dominio (NIC.ar)</h3>
+              <table class="costos-table">
+                <thead><tr><th>Dominio</th><th>Alta</th><th>Renovación/año</th></tr></thead>
+                <tbody>
+                  <tr><td>.ar</td><td>~$3.500 ARS</td><td>~$3.500 ARS</td></tr>
+                  <tr><td>.com.ar</td><td>~$2.500 ARS</td><td>~$2.500 ARS</td></tr>
+                  <tr><td>.com</td><td>~$15 USD</td><td>~$15 USD/año</td></tr>
+                  <tr><td>.net</td><td>~$15 USD</td><td>~$15 USD/año</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="admin-card">
+              <h3>🔧 Precios de creación sugeridos</h3>
+              <table class="costos-table">
+                <thead><tr><th>Servicio</th><th>Básico</th><th>Intermedio</th><th>Avanzado</th></tr></thead>
+                <tbody>
+                  <tr><td>Web Comercio</td><td>$120k</td><td>$220k</td><td>$400k</td></tr>
+                  <tr><td>Inmobiliaria</td><td>$220k</td><td>$380k</td><td>$600k</td></tr>
+                  <tr><td>App Móvil</td><td>$400k</td><td>$800k</td><td>$1.5M</td></tr>
+                  <tr><td>Sistema Admin</td><td>$300k</td><td>$600k</td><td>$1.2M</td></tr>
+                  <tr><td>Publicidad/mes</td><td>$50k</td><td>$100k</td><td>$200k</td></tr>
+                  <tr><td>Community/mes</td><td>$60k</td><td>$100k</td><td>$180k</td></tr>
+                  <tr><td>Hosting Juegos/mes</td><td>$30k</td><td>$70k</td><td>$150k</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="admin-card">
+              <h3>🛠️ Soporte y mantenimiento mensual</h3>
+              <table class="costos-table">
+                <thead><tr><th>Tipo</th><th>Precio sugerido</th></tr></thead>
+                <tbody>
+                  <tr><td>Mantenimiento básico (actualizaciones)</td><td>$15.000/mes</td></tr>
+                  <tr><td>Soporte con cambios menores</td><td>$30.000/mes</td></tr>
+                  <tr><td>Soporte full (cambios + hosting)</td><td>$50.000/mes</td></tr>
+                  <tr><td>Hora de desarrollo adicional</td><td>$8.000 - $15.000</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="responder-presupuesto.js"></script>
+</body>
+</html>
