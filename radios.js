@@ -173,9 +173,8 @@ function connectSocket() {
   }
 
   socket.on('video_stream_start', () => {
-    // Nuevo stream arrancando: resetear MSE para forzar reinicialización limpia
     const vid = document.getElementById('vidEl');
-    if (vid) { vid.pause(); vid.src = ''; }
+    if (vid) { vid.pause(); vid.src = ''; vid.load(); }
     screenMse = null; screenBuf = null; screenQ = [];
   });
 
@@ -330,8 +329,9 @@ function flushMSE() {
 }
 
 // ── MSE video ─────────────────────────────
+let screenStallHandler = null;
+
 function initVideoMSE() {
-  // Limpiar MSE viejo si ya cerró (sesión anterior sin screen_share_stop)
   if (screenMse && screenMse.readyState !== 'open') {
     screenMse = null; screenBuf = null; screenQ = [];
   }
@@ -340,12 +340,27 @@ function initVideoMSE() {
 
   const vid  = document.getElementById('vidEl');
   const card = document.getElementById('camCard');
+  if (!vid || !card) return;
 
   const mimes = ['video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
   const m = mimes.find(x => MediaSource.isTypeSupported(x));
   if (!m) return;
 
   card.classList.add('visible');
+
+  // Reemplazar stall handler anterior para no acumular listeners
+  if (screenStallHandler) {
+    vid.removeEventListener('waiting', screenStallHandler);
+    vid.removeEventListener('stalled', screenStallHandler);
+  }
+  screenStallHandler = () => {
+    if (!screenBuf || !screenBuf.buffered.length) return;
+    const bufEnd = screenBuf.buffered.end(0);
+    if (bufEnd > vid.currentTime + 0.5) vid.currentTime = bufEnd - 0.1;
+    vid.play().catch(() => {});
+  };
+  vid.addEventListener('waiting', screenStallHandler);
+  vid.addEventListener('stalled', screenStallHandler);
 
   screenMse = new MediaSource();
   const thisMs = screenMse;
@@ -360,12 +375,10 @@ function initVideoMSE() {
       screenBuf.addEventListener('updateend', flushVideoNow);
       flushVideoNow();
     } catch(e) {
-      // Si falla, resetear para permitir reintento
       screenMse = null; screenBuf = null; screenQ = [];
     }
   });
 
-  // Si el MSE nunca abre (error), resetear
   screenMse.addEventListener('sourceclose', () => {
     if (screenMse === thisMs) { screenMse = null; screenBuf = null; }
   });
@@ -383,20 +396,33 @@ function initVideoMSE() {
 function flushVideoNow() {
   if (!screenBuf || screenBuf.updating || screenQ.length === 0) return;
   try {
-    // Solo borrar datos ANTERIORES al currentTime, nunca los que el video necesita ahora
     const vid = document.getElementById('vidEl');
-    if (screenBuf.buffered.length > 0 && vid) {
-      const start = screenBuf.buffered.start(0);
-      const ct = vid.currentTime;
-      const removeEnd = Math.max(start, ct - 1); // dejar 1s de colchón atrás
-      if (removeEnd > start + 0.5) {
-        screenBuf.remove(start, removeEnd);
+    if (vid && screenBuf.buffered.length > 0) {
+      const bufEnd   = screenBuf.buffered.end(0);
+      const bufStart = screenBuf.buffered.start(0);
+      const ct       = vid.currentTime;
+      // Si el video está muy atrasado respecto al buffer, saltar al frente
+      if (bufEnd - ct > 3) {
+        vid.currentTime = bufEnd - 0.1;
+      }
+      // Limpiar datos ya reproducidos
+      const removeEnd = Math.max(bufStart, ct - 1);
+      if (removeEnd > bufStart + 0.5) {
+        screenBuf.remove(bufStart, removeEnd);
         return;
       }
     }
     const c = screenQ.shift();
     screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer);
-  } catch(e) {}
+  } catch(e) {
+    if (e.name === 'QuotaExceededError') {
+      // Buffer lleno: descartar cola y vaciar buffer para recuperar
+      screenQ.length = 0;
+      if (!screenBuf.updating && screenBuf.buffered.length > 0) {
+        try { screenBuf.remove(screenBuf.buffered.start(0), screenBuf.buffered.end(0)); } catch(_) {}
+      }
+    }
+  }
 }
 
 // ── Chat ──────────────────────────────────
