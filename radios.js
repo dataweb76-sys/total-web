@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://original-rides-london-cheapest.trycloudflare.com';
+const RADIO_SERVER = 'https://antarctica-soldier-informative-prior.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
