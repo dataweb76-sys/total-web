@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://witness-zope-notebooks-cost.trycloudflare.com';
+const RADIO_SERVER = 'https://filename-monroe-daily-strips.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
