@@ -101,14 +101,27 @@ function connectSocket() {
     screenMse = null; screenBuf = null; screenQ = [];
   });
 
-  socket.on('ad_start', ad => {
+  // ad_play: publicidad de la biblioteca (con imagen/audio)
+  socket.on('ad_play', ad => {
     if (!ad) return;
     const slot = document.getElementById('adSlot');
+    slot.style.display = '';
     if (ad.imageUrl) {
-      slot.innerHTML = `<img src="${ad.imageUrl}" alt="${esc(ad.name)}"><p class="ad-name">${esc(ad.name)}</p>`;
+      slot.innerHTML = `<img src="${resolveUrl(ad.imageUrl)}" alt="${esc(ad.name)}" style="max-width:100%;border-radius:8px"><p class="ad-name">${esc(ad.name)}</p>`;
     } else {
-      slot.innerHTML = `<span style="font-size:1.5rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
+      slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
     }
+  });
+
+  // ad_broadcast: publicidad de texto/banner enviada desde el panel admin
+  socket.on('ad_broadcast', data => {
+    if (!data) return;
+    const slot = document.getElementById('adSlot');
+    slot.style.display = '';
+    let html = '';
+    if (data.banner) html += `<img src="${resolveUrl(data.banner)}" alt="Publicidad" style="max-width:100%;border-radius:8px">`;
+    if (data.text)   html += `<p class="ad-name" style="font-size:1.1rem;padding:8px">${esc(data.text)}</p>`;
+    if (html) slot.innerHTML = html;
   });
 }
 
