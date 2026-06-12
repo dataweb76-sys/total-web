@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://person-own-bone-secret.trycloudflare.com';
+const RADIO_SERVER = 'https://mai-tuning-salad-rounds.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
