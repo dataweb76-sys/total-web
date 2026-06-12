@@ -288,13 +288,15 @@
             </div>
           </div>
 
-          <!-- VIDEO / PUBLICIDAD -->
+          <!-- CÁMARA EN VIVO (solo visible cuando hay stream) -->
+          <div class="video-wrap" id="videoWrap" style="margin-bottom:16px">
+            <div class="video-label">📷 En vivo</div>
+            <video id="vidEl" autoplay playsinline></video>
+          </div>
+
+          <!-- PUBLICIDAD (siempre visible, independiente) -->
           <div class="r-card">
             <div class="r-card-title">📢 Publicidad</div>
-            <div class="video-wrap" id="videoWrap">
-              <div class="video-label">En vivo</div>
-              <video id="vidEl" autoplay playsinline></video>
-            </div>
             <div class="ad-slot" id="adSlot">
               <span style="font-size:1.8rem">📡</span>
               <span>Espacio publicitario</span>
