@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://filename-monroe-daily-strips.trycloudflare.com';
+const RADIO_SERVER = 'https://original-rides-london-cheapest.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
