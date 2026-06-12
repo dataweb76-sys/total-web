@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://engines-propecia-north-riverside.trycloudflare.com';
+const RADIO_SERVER = 'https://com-heath-proud-collection.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
