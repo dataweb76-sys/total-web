@@ -1,7 +1,10 @@
-const CACHE = 'radio-pampa-v1';
+const CACHE = 'radio-pampa-v2';
+
+// radios.js NO va al cache: cambia con cada rotación del túnel Cloudflare
+const ALWAYS_NETWORK = ['/radios.js'];
+
 const SHELL = [
   '/radios.html',
-  '/radios.js',
   '/styles.css',
   '/script.js',
   '/manifest.json'
@@ -22,15 +25,26 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // No cachear Socket.io ni el servidor de radio (streaming)
-  if (e.request.url.includes('socket.io') || e.request.url.includes('trycloudflare')) return;
+  const url = e.request.url;
+
+  // Nunca cachear: socket.io, cloudflare (streaming), radios.js (URL del túnel cambia)
+  if (url.includes('socket.io') || url.includes('trycloudflare') ||
+      ALWAYS_NETWORK.some(p => url.endsWith(p))) {
+    e.respondWith(fetch(e.request).catch(() => new Response('', { status: 503 })));
+    return;
+  }
+
+  // Cache-first para el resto del shell
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
-      if (res.ok && e.request.method === 'GET') {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-      }
-      return res;
-    }).catch(() => cached))
+    caches.match(e.request).then(cached => {
+      const network = fetch(e.request).then(res => {
+        if (res.ok && e.request.method === 'GET') {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return res;
+      });
+      return cached || network;
+    })
   );
 });
