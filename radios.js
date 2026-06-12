@@ -143,9 +143,12 @@ function connectSocket() {
   function setupMicMSE() {
     if (mseMic || !window.MediaSource) return;
     audioMic = new Audio();
+    audioMic.autoplay = true;
     mseMic = new MediaSource();
     const thisMse = mseMic;
     audioMic.src = URL.createObjectURL(mseMic);
+    // Intentar play de inmediato para heredar el contexto de audio activo de la página
+    audioMic.play().catch(() => {});
     const mime = 'audio/webm;codecs=opus';
     mseMic.addEventListener('sourceopen', () => {
       if (mseMic !== thisMse || thisMse.readyState !== 'open' || mseBufMic) return;
@@ -155,9 +158,10 @@ function connectSocket() {
       mseBufMic.addEventListener('updateend', flushMicMSE);
       flushMicMSE();
     });
-    audioMic.addEventListener('canplay', function onCp() {
-      audioMic.removeEventListener('canplay', onCp);
-      audioMic.play().catch(() => {});
+    audioMic.addEventListener('canplay', () => audioMic.play().catch(() => {}));
+    audioMic.addEventListener('pause', () => {
+      // Si el browser pausó por política de autoplay, reintentar
+      if (mseBufMic) audioMic.play().catch(() => {});
     });
   }
 
