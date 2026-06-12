@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://penalties-download-drum-governmental.trycloudflare.com';
+const RADIO_SERVER = 'https://tail-practice-correlation-certificates.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
