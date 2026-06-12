@@ -81,10 +81,9 @@ function connectSocket() {
   socket.on('chat_message', msg => appendChat(msg.name, msg.text));
 
   socket.on('video_chunk', chunk => {
-    document.getElementById('videoWrap').classList.add('visible');
-    document.getElementById('adSlot').style.display = 'none';
+    initVideoMSE();
     screenQ.push(chunk);
-    flushVideo();
+    flushVideoNow();
   });
 
   socket.on('screen_share_stop', () => {
@@ -183,27 +182,42 @@ function flushMSE() {
 }
 
 // ── MSE video ─────────────────────────────
-function flushVideo() {
-  const vid = document.getElementById('vidEl');
-  if (!screenMse) {
-    screenMse = new MediaSource();
-    vid.src = URL.createObjectURL(screenMse);
-    screenMse.addEventListener('sourceopen', () => {
-      const mime = 'video/webm;codecs=vp8,opus';
-      if (!MediaSource.isTypeSupported(mime)) return;
-      screenBuf = screenMse.addSourceBuffer(mime);
-      screenBuf.mode = 'sequence';
-      screenBuf.addEventListener('updateend', flushVideoNow);
-      flushVideoNow();
-    });
+function initVideoMSE() {
+  if (screenMse) return;
+  const vid  = document.getElementById('vidEl');
+  const wrap = document.getElementById('videoWrap');
+  wrap.classList.add('visible');
+  document.getElementById('adSlot').style.display = 'none';
+
+  screenMse = new MediaSource();
+  const thisMs = screenMse;
+  vid.src = URL.createObjectURL(screenMse);
+
+  screenMse.addEventListener('sourceopen', () => {
+    if (screenMse !== thisMs || thisMs.readyState !== 'open') return;
+    if (screenBuf) return;
+    const mime = 'video/webm;codecs=vp8,opus';
+    const mime2 = 'video/webm';
+    const m = MediaSource.isTypeSupported(mime) ? mime : (MediaSource.isTypeSupported(mime2) ? mime2 : null);
+    if (!m) return;
+    screenBuf = screenMse.addSourceBuffer(m);
+    screenBuf.mode = 'sequence';
+    screenBuf.addEventListener('updateend', flushVideoNow);
+    flushVideoNow();
+  });
+
+  vid.addEventListener('canplay', function onCp() {
+    vid.removeEventListener('canplay', onCp);
     vid.play().catch(() => {});
-  }
-  flushVideoNow();
+  });
 }
 
 function flushVideoNow() {
   if (!screenBuf || screenBuf.updating || screenQ.length === 0) return;
-  try { const c = screenQ.shift(); screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer); } catch(e) {}
+  try {
+    const c = screenQ.shift();
+    screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer);
+  } catch(e) {}
 }
 
 // ── Chat ──────────────────────────────────
