@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://depot-nat-hayes-wyoming.trycloudflare.com';
+const RADIO_SERVER = 'https://requests-cir-using-auburn.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
