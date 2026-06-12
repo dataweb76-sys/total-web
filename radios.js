@@ -60,12 +60,13 @@ function connectSocket() {
       audio.src = currentUrl;
       if (isPlaying) audio.play().catch(() => {});
     } else if (track) {
+      // Modo en vivo: actualizar nombre e indicador pero NO cortar la música
+      // todavía — la música se corta cuando llega el primer chunk de audio en vivo
       liveMode = true;
       currentUrl = null;
       setLive(true);
       setTrack(track.name || '🎙️ En Vivo');
-      teardownMSE();
-      if (isPlaying) setupMSE(true);
+      // No llamamos teardownMSE() ni setupMSE() acá — esperamos el primer chunk
     }
   });
 
@@ -73,7 +74,13 @@ function connectSocket() {
 
   socket.on('live_audio_chunk', chunk => {
     if (!liveMode || !isPlaying) return;
-    if (!mse) setupMSE();
+    if (!mse) {
+      // Primer chunk: recién acá cortamos la música y arrancamos MSE
+      audio.pause();
+      audio.src = '';
+      teardownMSE();
+      setupMSE(true);
+    }
     mseQ.push(chunk);
     flushMSE();
   });
