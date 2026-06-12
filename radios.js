@@ -101,15 +101,34 @@ function connectSocket() {
     screenMse = null; screenBuf = null; screenQ = [];
   });
 
-  // ad_play: publicidad de la biblioteca (con imagen/audio)
+  // ad_play: publicidad de la biblioteca (audio o video)
   socket.on('ad_play', ad => {
     if (!ad) return;
-    const slot = document.getElementById('adSlot');
-    slot.style.display = '';
-    if (ad.imageUrl) {
-      slot.innerHTML = `<img src="${resolveUrl(ad.imageUrl)}" alt="${esc(ad.name)}" style="max-width:100%;border-radius:8px"><p class="ad-name">${esc(ad.name)}</p>`;
+    const slot   = document.getElementById('adSlot');
+    const wrap   = document.getElementById('videoWrap');
+    const vidEl  = document.getElementById('vidEl');
+    const adUrl  = resolveUrl(ad.url);
+
+    if (ad.type === 'video') {
+      // Mostrar video directamente (archivo estático, no MSE)
+      slot.style.display = 'none';
+      wrap.classList.add('visible');
+      // Resetear MSE de pantalla si había uno activo
+      screenMse = null; screenBuf = null; screenQ = [];
+      vidEl.src = adUrl;
+      vidEl.play().catch(() => {});
+      vidEl.onended = () => {
+        wrap.classList.remove('visible');
+        slot.style.display = '';
+        vidEl.src = '';
+      };
     } else {
+      // Audio: mostrar nombre y reproducir en segundo plano
+      slot.style.display = '';
       slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
+      const adAudio = new Audio(adUrl);
+      adAudio.volume = audio.volume;
+      adAudio.play().catch(() => {});
     }
   });
 
