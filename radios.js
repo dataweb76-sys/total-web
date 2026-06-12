@@ -223,8 +223,16 @@ function flushMSE() {
 // ── MSE video ─────────────────────────────
 function initVideoMSE() {
   if (screenMse) return;
+  if (!window.MediaSource) return;
+
   const vid  = document.getElementById('vidEl');
   const wrap = document.getElementById('videoWrap');
+
+  // Intentar los mimes en orden hasta encontrar uno soportado
+  const mimes = ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm'];
+  const m = mimes.find(x => MediaSource.isTypeSupported(x));
+  if (!m) return;
+
   wrap.classList.add('visible');
   document.getElementById('adSlot').style.display = 'none';
 
@@ -235,13 +243,25 @@ function initVideoMSE() {
   screenMse.addEventListener('sourceopen', () => {
     if (screenMse !== thisMs || thisMs.readyState !== 'open') return;
     if (screenBuf) return;
-    const m = 'video/webm';
-    if (!MediaSource.isTypeSupported(m)) return;
-    screenBuf = screenMse.addSourceBuffer(m);
-    screenBuf.mode = 'sequence';
-    screenBuf.addEventListener('updateend', flushVideoNow);
-    flushVideoNow();
+    try {
+      screenBuf = screenMse.addSourceBuffer(m);
+      screenBuf.mode = 'sequence';
+      screenBuf.addEventListener('updateend', flushVideoNow);
+      flushVideoNow();
+    } catch(e) {
+      // Si falla, resetear para permitir reintento
+      screenMse = null; screenBuf = null; screenQ = [];
+    }
   });
+
+  // Si el MSE nunca abre (error), resetear
+  screenMse.addEventListener('sourceclose', () => {
+    if (screenMse === thisMs) { screenMse = null; screenBuf = null; }
+  });
+
+  vid.onerror = () => {
+    if (screenMse === thisMs) { screenMse = null; screenBuf = null; screenQ = []; }
+  };
 
   vid.addEventListener('canplay', function onCp() {
     vid.removeEventListener('canplay', onCp);
