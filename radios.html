@@ -2,65 +2,94 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Radio Pampa AR — Escuchá en vivo, chateá con otros oyentes y participá de los podcasts." />
   <title>Radio Pampa AR | Local Web</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ef4444" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Radio Pampa" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     /* ── Radio page styles ───────────────────────────── */
     .radio-hero {
-      padding: 100px 0 40px;
+      padding: 90px 0 32px;
       background: radial-gradient(ellipse at 60% 0%, rgba(239,68,68,0.12) 0%, transparent 60%),
                   radial-gradient(ellipse at 20% 80%, rgba(59,130,246,0.1) 0%, transparent 50%);
     }
     .radio-hero-inner {
-      display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
     }
     .radio-live-dot {
-      width: 12px; height: 12px; border-radius: 50%; background: #ef4444;
+      width: 11px; height: 11px; border-radius: 50%; background: #ef4444;
       animation: blink 1.2s ease-in-out infinite; display: none;
     }
     .radio-live-dot.active { display: block; }
     @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.85)} }
-    .radio-hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; }
-    .radio-hero p  { color: var(--text-muted); margin-top: 6px; font-size: .95rem; }
+    .radio-hero h1 { font-size: clamp(1.45rem, 5vw, 2.4rem); font-weight: 800; line-height: 1.1; }
+    .radio-hero p  { color: var(--text-muted); margin-top: 6px; font-size: .9rem; }
 
-    /* GRID */
+    /* INSTALL BUTTON */
+    #btnInstall {
+      display: none;
+      align-items: center; gap: 6px;
+      margin-top: 14px;
+      padding: 9px 18px; border-radius: 10px;
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #f87171; font-size: .82rem; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: background .15s;
+    }
+    #btnInstall:hover { background: rgba(239,68,68,.25); }
+    #btnInstall.shown { display: inline-flex; }
+
+    /* GRID — desktop: 2 cols, mobile: 1 col */
     .radio-grid {
       display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
       padding-bottom: 60px;
       align-items: start;
     }
-    @media (max-width: 900px) { .radio-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) {
+      .radio-grid { grid-template-columns: 1fr; }
+      /* En mobile la columna derecha se pone debajo */
+      .radio-col-right { order: 10; }
+    }
 
     /* CARDS */
     .r-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 24px;
-      margin-bottom: 20px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
     }
+    @media (max-width: 480px) { .r-card { padding: 14px 14px; } }
     .r-card-title {
-      font-size: .75rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--text-muted); margin-bottom: 16px;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text-muted); margin-bottom: 14px;
     }
 
     /* PLAYER */
-    .player-top { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .player-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .player-icon {
-      width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0;
+      width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
       background: linear-gradient(135deg, #ef4444, #f97316);
-      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
     }
-    .player-meta h2 { font-size: 1.15rem; font-weight: 700; }
+    .player-meta h2 { font-size: 1.05rem; font-weight: 700; }
     .player-conn {
       display: flex; align-items: center; gap: 6px;
-      font-size: .75rem; color: var(--text-muted); margin-top: 3px;
+      font-size: .73rem; color: var(--text-muted); margin-top: 3px;
     }
     .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #4b5563; }
     .conn-dot.on { background: #22c55e; }
@@ -68,17 +97,17 @@
       display: none; margin-left: auto;
       background: rgba(239,68,68,.15); color: #f87171;
       border: 1px solid rgba(239,68,68,.3);
-      font-size: .7rem; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+      font-size: .68rem; font-weight: 700; padding: 4px 10px; border-radius: 999px;
       animation: blink 1.2s ease-in-out infinite;
     }
     .live-badge.visible { display: inline-flex; align-items: center; gap: 5px; }
 
     .track-box {
-      background: var(--surface2); border-radius: 12px;
-      padding: 14px 18px; margin-bottom: 16px; min-height: 52px;
+      background: var(--surface2); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 14px; min-height: 48px;
       display: flex; align-items: center; gap: 10px;
     }
-    .track-eq { display: flex; align-items: flex-end; gap: 3px; height: 20px; flex-shrink: 0; display: none; }
+    .track-eq { display: none; align-items: flex-end; gap: 3px; height: 18px; flex-shrink: 0; }
     .track-eq.active { display: flex; }
     .eq-bar {
       width: 4px; border-radius: 2px; background: #3b82f6;
@@ -86,22 +115,24 @@
     }
     .eq-bar:nth-child(2) { animation-delay: .15s; }
     .eq-bar:nth-child(3) { animation-delay: .3s; }
-    @keyframes eq { from{height:4px} to{height:18px} }
-    .track-name { font-size: .9rem; font-weight: 500; color: var(--text); }
+    @keyframes eq { from{height:4px} to{height:16px} }
+    .track-name { font-size: .88rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .player-controls { display: flex; align-items: center; gap: 12px; }
+    .player-controls { display: flex; align-items: center; gap: 10px; }
     .btn-play-main {
-      flex: 1; padding: 14px; border-radius: 14px; border: none; cursor: pointer;
+      flex: 1; padding: 13px; border-radius: 12px; border: none; cursor: pointer;
       background: linear-gradient(135deg, #ef4444, #f97316);
-      color: #fff; font-size: 1rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      color: #fff; font-size: .95rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      min-height: 46px;
       transition: opacity .15s, transform .1s;
     }
     .btn-play-main:hover:not(:disabled) { opacity: .88; transform: scale(1.01); }
     .btn-play-main:disabled { opacity: .35; cursor: not-allowed; }
     .btn-play-main.paused { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
     .vol-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-    .vol-wrap span { font-size: 1rem; cursor: pointer; }
-    .vol-wrap input { width: 80px; accent-color: #ef4444; }
+    .vol-wrap span { font-size: 1.1rem; cursor: pointer; }
+    .vol-wrap input { width: 72px; accent-color: #ef4444; }
+    @media (max-width: 380px) { .vol-wrap input { width: 54px; } }
 
     /* BANNER */
     .banner-strip {
@@ -111,32 +142,49 @@
       border-radius: 10px;
       padding: 10px 16px;
       margin-bottom: 14px;
-      font-size: .88rem;
-      font-weight: 600;
-      color: #fca5a5;
+      font-size: .86rem; font-weight: 600;
+      color: #fca5a5; overflow: hidden;
       animation: bannerFade .4s ease;
     }
     .banner-strip.visible { display: block; }
+    #bannerText {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
     @keyframes bannerFade { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes marquee { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+
+    /* PUBLICIDAD — en panel principal, arriba del chat */
+    .ad-slot {
+      background: var(--surface2); border-radius: 12px;
+      min-height: 90px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+      padding: 16px; text-align: center; color: var(--text-muted);
+      font-size: .82rem; border: 1px dashed var(--border);
+    }
+    .ad-slot img { width: 100%; border-radius: 10px; object-fit: cover; max-height: 160px; }
+    .ad-slot .ad-name { font-weight: 600; color: var(--text); }
 
     /* CHAT */
     .chat-messages {
-      height: 240px; overflow-y: auto; background: var(--surface2);
-      border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;
-      display: flex; flex-direction: column; gap: 8px;
+      height: 220px; overflow-y: auto; background: var(--surface2);
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+      display: flex; flex-direction: column; gap: 7px;
     }
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .chat-empty { font-size: .8rem; color: var(--text-muted); text-align: center; margin: auto; }
+    .chat-empty { font-size: .78rem; color: var(--text-muted); text-align: center; margin: auto; }
     .chat-msg { font-size: .82rem; line-height: 1.45; }
     .chat-msg-name { font-weight: 700; color: #60a5fa; margin-right: 5px; }
     .chat-msg-text { color: var(--text); }
-    .chat-form { display: flex; gap: 8px; }
+    .chat-form { display: flex; gap: 7px; }
     .chat-name {
-      width: 88px; flex-shrink: 0; padding: 9px 10px;
+      width: 80px; flex-shrink: 0; padding: 9px 8px;
       background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text); font-size: .8rem; font-family: 'Inter', sans-serif;
+      border-radius: 10px; color: var(--text); font-size: .78rem; font-family: 'Inter', sans-serif;
     }
+    @media (max-width: 380px) { .chat-name { display: none; } }
     .chat-input {
       flex: 1; padding: 9px 12px;
       background: var(--surface2); border: 1px solid var(--border);
@@ -145,73 +193,55 @@
     .chat-input:focus, .chat-name:focus { outline: none; border-color: #3b82f6; }
     .chat-send {
       padding: 9px 14px; border-radius: 10px; border: none; cursor: pointer;
-      background: var(--grad); color: #fff; font-size: 1rem;
+      background: var(--grad); color: #fff; font-size: 1rem; min-width: 42px;
     }
     .chat-send:disabled { opacity: .35; }
 
     /* PODCAST */
     .ep-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid var(--border);
-      cursor: pointer; transition: background .1s;
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
     }
     .ep-item:last-child { border-bottom: none; }
     .ep-num {
-      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
       background: var(--surface2); color: var(--text-muted);
-      font-size: .72rem; font-weight: 700;
+      font-size: .7rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
     }
-    .ep-name { font-size: .83rem; font-weight: 500; color: var(--text); }
-    .ep-empty { font-size: .82rem; color: var(--text-muted); text-align: center; padding: 12px 0; }
+    .ep-name { font-size: .82rem; font-weight: 500; color: var(--text); }
+    .ep-empty { font-size: .8rem; color: var(--text-muted); text-align: center; padding: 10px 0; }
 
     /* CÁMARA EN VIVO */
     .cam-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 20px;
-      display: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; display: none;
     }
     .cam-card.visible { display: block; }
     .cam-header {
-      padding: 10px 16px;
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(239,68,68,.08);
-      border-bottom: 1px solid var(--border);
+      padding: 9px 14px; display: flex; align-items: center; gap: 7px;
+      background: rgba(239,68,68,.08); border-bottom: 1px solid var(--border);
     }
     .cam-live-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
+      width: 7px; height: 7px; border-radius: 50%; background: #ef4444;
       animation: blink 1.2s ease-in-out infinite;
     }
-    .cam-header span { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #f87171; }
-    #vidEl { width: 100%; display: block; background: #000; min-height: 180px; }
-
-    /* PUBLICIDAD */
-    .ad-slot {
-      background: var(--surface2); border-radius: 12px;
-      min-height: 100px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 8px;
-      padding: 20px; text-align: center; color: var(--text-muted);
-      font-size: .82rem; border: 1px dashed var(--border);
-    }
-    .ad-slot img { width: 100%; border-radius: 10px; object-fit: cover; max-height: 160px; }
-    .ad-slot .ad-name { font-weight: 600; color: var(--text); }
+    .cam-header span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #f87171; }
+    #vidEl { width: 100%; display: block; background: #000; min-height: 160px; }
 
     /* DONACIONES */
-    .donate-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .donate-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 12px; }
     .donate-opt {
       background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer;
-      transition: border-color .15s, background .15s; font-size: .82rem;
+      border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;
+      transition: border-color .15s, background .15s; font-size: .78rem;
     }
     .donate-opt:hover, .donate-opt.selected {
       border-color: #8b5cf6; background: rgba(139,92,246,.12);
     }
-    .donate-opt strong { display: block; font-size: 1rem; color: var(--text); }
-    .donate-opt span { color: var(--text-muted); font-size: .72rem; }
-    .donate-custom { display: flex; gap: 8px; margin-bottom: 14px; }
+    .donate-opt strong { display: block; font-size: .95rem; color: var(--text); }
+    .donate-opt span { color: var(--text-muted); font-size: .68rem; }
+    .donate-custom { display: flex; gap: 8px; margin-bottom: 12px; }
     .donate-custom input {
       flex: 1; padding: 9px 12px; background: var(--surface2);
       border: 1px solid var(--border); border-radius: 10px;
@@ -221,18 +251,18 @@
     .btn-donate {
       width: 100%; padding: 13px; border-radius: 12px; border: none; cursor: pointer;
       background: linear-gradient(135deg, #8b5cf6, #6366f1);
-      color: #fff; font-size: .95rem; font-weight: 700; font-family: 'Inter', sans-serif;
-      transition: opacity .15s;
+      color: #fff; font-size: .93rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      min-height: 46px; transition: opacity .15s;
     }
     .btn-donate:hover { opacity: .88; }
-    .donate-note { font-size: .72rem; color: var(--text-muted); text-align: center; margin-top: 10px; }
+    .donate-note { font-size: .7rem; color: var(--text-muted); text-align: center; margin-top: 8px; }
 
     /* WHATSAPP */
     .btn-wa {
       display: flex; align-items: center; justify-content: center; gap: 10px;
       width: 100%; padding: 13px; border-radius: 12px;
-      background: #22c55e; color: #fff; font-weight: 700; font-size: .95rem;
-      text-decoration: none; transition: opacity .15s;
+      background: #22c55e; color: #fff; font-weight: 700; font-size: .93rem;
+      text-decoration: none; min-height: 46px; transition: opacity .15s;
     }
     .btn-wa:hover { opacity: .88; }
     .btn-wa svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
@@ -268,6 +298,7 @@
       </div>
       <h1>Radio Pampa AR <span class="gradient-text">en vivo</span></h1>
       <p>Escuchá nuestra programación, chateá con otros oyentes y apoyá la radio.</p>
+      <button id="btnInstall" onclick="installPWA()">📲 Instalar app en tu celular</button>
     </div>
   </section>
 
@@ -276,7 +307,7 @@
     <div class="container">
       <div class="radio-grid">
 
-        <!-- ── COLUMNA PRINCIPAL (izquierda) ── -->
+        <!-- ── COLUMNA PRINCIPAL ── -->
         <div>
 
           <!-- PLAYER -->
@@ -296,8 +327,8 @@
 
             <div class="track-box">
               <div class="track-eq" id="trackEq">
-                <div class="eq-bar" style="height:10px"></div>
-                <div class="eq-bar" style="height:16px"></div>
+                <div class="eq-bar" style="height:9px"></div>
+                <div class="eq-bar" style="height:15px"></div>
                 <div class="eq-bar" style="height:7px"></div>
               </div>
               <span class="track-name" id="trackName">Conectando a la radio...</span>
@@ -317,6 +348,16 @@
             <span id="bannerText"></span>
           </div>
 
+          <!-- PUBLICIDAD (arriba del chat) -->
+          <div class="r-card">
+            <div class="r-card-title">📢 Publicidad</div>
+            <div class="ad-slot" id="adSlot">
+              <span style="font-size:1.8rem">📡</span>
+              <span>Espacio publicitario</span>
+              <span style="font-size:.7rem">Contactanos para publicitar en la radio</span>
+            </div>
+          </div>
+
           <!-- CHAT -->
           <div class="r-card">
             <div class="r-card-title">💬 Chat en vivo</div>
@@ -330,7 +371,7 @@
             </form>
           </div>
 
-          <!-- PODCAST / PLAYLIST -->
+          <!-- PLAYLIST / PODCAST -->
           <div class="r-card">
             <div class="r-card-title">🎧 Podcast / Playlist</div>
             <div id="podcastList">
@@ -341,9 +382,9 @@
         </div>
 
         <!-- ── COLUMNA DERECHA ── -->
-        <div>
+        <div class="radio-col-right">
 
-          <!-- CÁMARA EN VIVO (solo aparece cuando hay stream activo) -->
+          <!-- CÁMARA EN VIVO -->
           <div class="cam-card" id="camCard">
             <div class="cam-header">
               <div class="cam-live-dot"></div>
@@ -352,26 +393,16 @@
             <video id="vidEl" autoplay playsinline muted></video>
           </div>
 
-          <!-- PUBLICIDAD -->
-          <div class="r-card">
-            <div class="r-card-title">📢 Publicidad</div>
-            <div class="ad-slot" id="adSlot">
-              <span style="font-size:1.8rem">📡</span>
-              <span>Espacio publicitario</span>
-              <span style="font-size:.72rem">Contactanos para publicitar en la radio</span>
-            </div>
-          </div>
-
           <!-- DONACIONES -->
           <div class="r-card">
             <div class="r-card-title">💜 Apoyá la radio</div>
-            <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:16px">
+            <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">
               Tu donación nos ayuda a mantener la radio al aire y mejorar la programación.
             </p>
-            <div class="donate-options" id="donateOpts">
-              <div class="donate-opt" onclick="selectAmount(500)"><strong>$500</strong><span>Colaboración</span></div>
-              <div class="donate-opt selected" onclick="selectAmount(1000)"><strong>$1.000</strong><span>Apoyo</span></div>
-              <div class="donate-opt" onclick="selectAmount(2000)"><strong>$2.000</strong><span>Mecenas</span></div>
+            <div class="donate-options">
+              <div class="donate-opt" onclick="selectAmount(500,event)"><strong>$500</strong><span>Colaboración</span></div>
+              <div class="donate-opt selected" onclick="selectAmount(1000,event)"><strong>$1.000</strong><span>Apoyo</span></div>
+              <div class="donate-opt" onclick="selectAmount(2000,event)"><strong>$2.000</strong><span>Mecenas</span></div>
             </div>
             <div class="donate-custom">
               <input type="number" id="donateAmount" placeholder="O ingresá un monto..." min="100" value="1000">
@@ -383,7 +414,7 @@
           <!-- WHATSAPP -->
           <div class="r-card">
             <div class="r-card-title">📱 Contacto directo</div>
-            <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:14px">
+            <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
               ¿Querés pedir un tema, hacer un saludo o publicitar en la radio?
             </p>
             <a href="https://wa.me/5492954320639?text=Hola%20Radio%20Pampa%20AR%2C%20quiero%20contactarme!"
@@ -437,5 +468,38 @@
 
   <script src="radios.js"></script>
   <script src="script.js"></script>
+
+  <!-- Service Worker + PWA install prompt -->
+  <script>
+    // Registrar Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+    // Prompt de instalación
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      document.getElementById('btnInstall').classList.add('shown');
+    });
+    window.addEventListener('appinstalled', () => {
+      document.getElementById('btnInstall').classList.remove('shown');
+      deferredInstallPrompt = null;
+    });
+    function installPWA() {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+    }
+
+    // Fix: selectAmount necesita el event explícito
+    function selectAmount(val, e) {
+      donateAmount = val;
+      document.getElementById('donateAmount').value = val;
+      document.querySelectorAll('.donate-opt').forEach(el => el.classList.remove('selected'));
+      (e?.currentTarget || event?.currentTarget)?.classList.add('selected');
+    }
+  </script>
 </body>
 </html>
