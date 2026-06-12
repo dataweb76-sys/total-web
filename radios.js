@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://resolutions-occasional-certification-particularly.trycloudflare.com';
+const RADIO_SERVER = 'https://dressing-bangkok-miniature-valentine.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
@@ -94,39 +94,30 @@ function connectSocket() {
   });
 
   socket.on('screen_share_stop', () => {
-    document.getElementById('videoWrap').classList.remove('visible');
+    document.getElementById('camCard').classList.remove('visible');
     const vid = document.getElementById('vidEl');
     vid.pause(); vid.src = '';
     screenMse = null; screenBuf = null; screenQ = [];
-    // Restaurar publicidad si estaba oculta
-    const slot = document.getElementById('adSlot');
-    if (slot) slot.style.display = '';
   });
 
   // ad_play: publicidad de la biblioteca (audio o video)
   socket.on('ad_play', ad => {
     if (!ad) return;
-    const slot   = document.getElementById('adSlot');
-    const wrap   = document.getElementById('videoWrap');
-    const vidEl  = document.getElementById('vidEl');
-    const adUrl  = resolveUrl(ad.url);
+    const slot  = document.getElementById('adSlot');
+    const card  = document.getElementById('camCard');
+    const vidEl = document.getElementById('vidEl');
+    const adUrl = resolveUrl(ad.url);
 
     if (ad.type === 'video') {
-      // Mostrar video directamente (archivo estático, no MSE)
-      slot.style.display = 'none';
-      wrap.classList.add('visible');
-      // Resetear MSE de pantalla si había uno activo
+      card.classList.add('visible');
       screenMse = null; screenBuf = null; screenQ = [];
       vidEl.src = adUrl;
       vidEl.play().catch(() => {});
       vidEl.onended = () => {
-        wrap.classList.remove('visible');
-        slot.style.display = '';
+        card.classList.remove('visible');
         vidEl.src = '';
       };
     } else {
-      // Audio: mostrar nombre y reproducir en segundo plano
-      slot.style.display = '';
       slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
       const adAudio = new Audio(adUrl);
       adAudio.volume = audio.volume;
@@ -138,7 +129,6 @@ function connectSocket() {
   socket.on('ad_broadcast', data => {
     if (!data) return;
     const slot = document.getElementById('adSlot');
-    slot.style.display = '';
     let html = '';
     if (data.banner) html += `<img src="${resolveUrl(data.banner)}" alt="Publicidad" style="max-width:100%;border-radius:8px">`;
     if (data.text)   html += `<p class="ad-name" style="font-size:1.1rem;padding:8px">${esc(data.text)}</p>`;
@@ -228,13 +218,11 @@ function initVideoMSE() {
   if (!window.MediaSource) return;
 
   const vid  = document.getElementById('vidEl');
-  const wrap = document.getElementById('videoWrap');
+  const card = document.getElementById('camCard');
 
-  // Intentar los mimes en orden hasta encontrar uno soportado
   const m = 'video/webm';
-  if (!m) return;
 
-  wrap.classList.add('visible');
+  card.classList.add('visible');
 
   screenMse = new MediaSource();
   const thisMs = screenMse;
