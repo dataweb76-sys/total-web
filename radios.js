@@ -235,10 +235,8 @@ function initVideoMSE() {
   screenMse.addEventListener('sourceopen', () => {
     if (screenMse !== thisMs || thisMs.readyState !== 'open') return;
     if (screenBuf) return;
-    const mime = 'video/webm;codecs=vp8,opus';
-    const mime2 = 'video/webm';
-    const m = MediaSource.isTypeSupported(mime) ? mime : (MediaSource.isTypeSupported(mime2) ? mime2 : null);
-    if (!m) return;
+    const m = 'video/webm';
+    if (!MediaSource.isTypeSupported(m)) return;
     screenBuf = screenMse.addSourceBuffer(m);
     screenBuf.mode = 'sequence';
     screenBuf.addEventListener('updateend', flushVideoNow);
