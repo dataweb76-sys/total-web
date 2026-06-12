@@ -93,6 +93,20 @@ function connectSocket() {
     flushVideoNow();
   });
 
+  socket.on('banner_show', data => {
+    const strip = document.getElementById('bannerStrip');
+    const txt   = document.getElementById('bannerText');
+    if (!strip || !txt) return;
+    txt.textContent = data.text || '';
+    strip.classList.add('visible');
+  });
+
+  socket.on('music_duck', level => {
+    audio.volume = Math.min(1, Math.max(0, Number(level) || 0));
+    const sl = document.getElementById('volSlider');
+    if (sl) sl.value = audio.volume;
+  });
+
   socket.on('screen_share_stop', () => {
     document.getElementById('camCard').classList.remove('visible');
     const vid = document.getElementById('vidEl');
