@@ -107,6 +107,70 @@ function connectSocket() {
     if (sl) sl.value = audio.volume;
   });
 
+  // ── Podcast mic: canal separado sobre la música ────────
+  let audioMic = null, mseMic = null, mseBufMic = null, mseQMic = [];
+
+  socket.on('podcast_start', ({ duck, name }) => {
+    // Bajar música sin cortarla
+    const vol = Math.min(1, Math.max(0, Number(duck) || 0.3));
+    audio.volume = vol;
+    const sl = document.getElementById('volSlider');
+    if (sl) sl.value = vol;
+    if (name) setTrack(name);
+    setupMicMSE();
+  });
+
+  socket.on('podcast_mic_chunk', chunk => {
+    if (!isPlaying) return;
+    if (!mseMic) setupMicMSE();
+    mseQMic.push(chunk instanceof ArrayBuffer ? chunk : chunk.buffer);
+    flushMicMSE();
+  });
+
+  socket.on('podcast_duck', level => {
+    audio.volume = Math.min(1, Math.max(0, Number(level) || 0));
+    const sl = document.getElementById('volSlider');
+    if (sl) sl.value = audio.volume;
+  });
+
+  socket.on('podcast_stop', () => {
+    teardownMicMSE();
+    audio.volume = 1;
+    const sl = document.getElementById('volSlider');
+    if (sl) sl.value = 1;
+  });
+
+  function setupMicMSE() {
+    if (mseMic || !window.MediaSource) return;
+    audioMic = new Audio();
+    mseMic = new MediaSource();
+    const thisMse = mseMic;
+    audioMic.src = URL.createObjectURL(mseMic);
+    const mime = 'audio/webm;codecs=opus';
+    mseMic.addEventListener('sourceopen', () => {
+      if (mseMic !== thisMse || thisMse.readyState !== 'open' || mseBufMic) return;
+      if (!MediaSource.isTypeSupported(mime)) return;
+      mseBufMic = mseMic.addSourceBuffer(mime);
+      mseBufMic.mode = 'sequence';
+      mseBufMic.addEventListener('updateend', flushMicMSE);
+      flushMicMSE();
+    });
+    audioMic.addEventListener('canplay', function onCp() {
+      audioMic.removeEventListener('canplay', onCp);
+      audioMic.play().catch(() => {});
+    });
+  }
+
+  function teardownMicMSE() {
+    if (audioMic) { audioMic.pause(); audioMic.src = ''; audioMic = null; }
+    mseMic = null; mseBufMic = null; mseQMic = [];
+  }
+
+  function flushMicMSE() {
+    if (!mseBufMic || mseBufMic.updating || mseQMic.length === 0) return;
+    try { mseBufMic.appendBuffer(mseQMic.shift()); } catch(e) {}
+  }
+
   socket.on('screen_share_stop', () => {
     document.getElementById('camCard').classList.remove('visible');
     const vid = document.getElementById('vidEl');
