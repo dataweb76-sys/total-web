@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://requests-cir-using-auburn.trycloudflare.com';
+const RADIO_SERVER = 'https://hidden-vat-isolated-stickers.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
