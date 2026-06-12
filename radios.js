@@ -100,28 +100,31 @@ function connectSocket() {
     screenMse = null; screenBuf = null; screenQ = [];
   });
 
+  const AD_SLOT_DEFAULT = `<span style="font-size:1.8rem">📡</span><span>Espacio publicitario</span><span style="font-size:.72rem">Contactanos para publicitar en la radio</span>`;
+
   // ad_play: publicidad de la biblioteca (audio o video)
   socket.on('ad_play', ad => {
     if (!ad) return;
     const slot  = document.getElementById('adSlot');
-    const card  = document.getElementById('camCard');
-    const vidEl = document.getElementById('vidEl');
     const adUrl = resolveUrl(ad.url);
 
     if (ad.type === 'video') {
-      card.classList.add('visible');
-      screenMse = null; screenBuf = null; screenQ = [];
-      vidEl.src = adUrl;
-      vidEl.play().catch(() => {});
-      vidEl.onended = () => {
-        card.classList.remove('visible');
-        vidEl.src = '';
-      };
+      // Video publicitario → aparece dentro del adSlot, NO toca la cámara
+      const v = document.createElement('video');
+      v.autoplay = true; v.playsinline = true; v.controls = true;
+      v.style.cssText = 'width:100%;border-radius:10px;max-height:220px;display:block';
+      v.src = adUrl;
+      slot.innerHTML = `<p class="ad-name" style="margin-bottom:8px">📢 ${esc(ad.name)}</p>`;
+      slot.appendChild(v);
+      v.play().catch(() => {});
+      v.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
     } else {
+      // Audio publicitario → muestra nombre, reproduce en segundo plano
       slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
       const adAudio = new Audio(adUrl);
       adAudio.volume = audio.volume;
       adAudio.play().catch(() => {});
+      adAudio.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
     }
   });
 
@@ -130,8 +133,8 @@ function connectSocket() {
     if (!data) return;
     const slot = document.getElementById('adSlot');
     let html = '';
-    if (data.banner) html += `<img src="${resolveUrl(data.banner)}" alt="Publicidad" style="max-width:100%;border-radius:8px">`;
-    if (data.text)   html += `<p class="ad-name" style="font-size:1.1rem;padding:8px">${esc(data.text)}</p>`;
+    if (data.banner) html += `<img src="${resolveUrl(data.banner)}" alt="Publicidad" style="max-width:100%;border-radius:8px;margin-bottom:8px">`;
+    if (data.text)   html += `<p class="ad-name" style="font-size:1.1rem;padding:8px 0">${esc(data.text)}</p>`;
     if (html) slot.innerHTML = html;
   });
 }
