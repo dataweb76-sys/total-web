@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://counted-taxes-wider-police.trycloudflare.com';
+const RADIO_SERVER = 'https://ratios-land-fossil-spanking.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
