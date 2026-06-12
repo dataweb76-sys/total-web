@@ -57,16 +57,13 @@ function connectSocket() {
       setLive(false);
       teardownMSE();
       setTrack(track.name || track.url);
-      audio.src = currentUrl;
-      if (isPlaying) audio.play().catch(() => {});
+      if (isPlaying) crossfadeTo(currentUrl);
+      else audio.src = currentUrl;
     } else if (track) {
-      // Modo en vivo: actualizar nombre e indicador pero NO cortar la música
-      // todavía — la música se corta cuando llega el primer chunk de audio en vivo
       liveMode = true;
       currentUrl = null;
       setLive(true);
       setTrack(track.name || '🎙️ En Vivo');
-      // No llamamos teardownMSE() ni setupMSE() acá — esperamos el primer chunk
     }
   });
 
@@ -85,7 +82,7 @@ function connectSocket() {
     flushMSE();
   });
 
-  socket.on('chat_message', msg => appendChat(msg.name, msg.text));
+  socket.on('chat_message', msg => appendChat(msg.user || msg.name, msg.text));
 
   socket.on('video_chunk', chunk => {
     initVideoMSE();
@@ -261,6 +258,35 @@ function toggleMute() {
   muted = !muted;
   audio.muted = muted;
   document.getElementById('volIcon').textContent = muted ? '🔇' : '🔊';
+}
+
+// ── Crossfade ─────────────────────────────
+function crossfadeTo(url) {
+  const next = new Audio();
+  next.volume = 0;
+  next.src = url;
+  next.play().catch(() => {});
+
+  const FADE_MS = 3000, TICK = 80;
+  const steps = FADE_MS / TICK;
+  let step = 0;
+  const oldAudio = audio;
+  const savedVol = oldAudio.volume;
+
+  // Reasignar `audio` de inmediato: setVol/mute/pause ya controlan la nueva pista
+  audio = next;
+
+  const tid = setInterval(() => {
+    step++;
+    const t = Math.min(1, step / steps);
+    next.volume = savedVol * t;
+    oldAudio.volume = savedVol * (1 - t);
+    if (t >= 1) {
+      clearInterval(tid);
+      oldAudio.pause();
+      oldAudio.src = '';
+    }
+  }, TICK);
 }
 
 // ── MSE audio ─────────────────────────────
