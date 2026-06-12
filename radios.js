@@ -188,26 +188,14 @@ function connectSocket() {
     const adUrl = resolveUrl(ad.url);
 
     if (ad.type === 'video') {
-      const camActive = screenMse !== null || document.getElementById('camCard')?.classList.contains('visible');
-      if (camActive) {
-        // Cámara en vivo: NO reproducir video (saturaria el ancho de banda del túnel)
-        // Solo mostrar nombre y reproducir solo el audio del video
-        slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p><span style="font-size:.72rem;color:var(--text-muted)">📡 En vivo</span>`;
-        const adAudio = new Audio(adUrl);
-        adAudio.volume = audio.volume;
-        adAudio.play().catch(() => {});
-        adAudio.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
-      } else {
-        // Sin cámara activa: reproducir video normalmente
-        const v = document.createElement('video');
-        v.autoplay = true; v.playsinline = true; v.controls = true;
-        v.style.cssText = 'width:100%;border-radius:10px;max-height:220px;display:block';
-        v.src = adUrl;
-        slot.innerHTML = `<p class="ad-name" style="margin-bottom:8px">📢 ${esc(ad.name)}</p>`;
-        slot.appendChild(v);
-        v.play().catch(() => {});
-        v.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
-      }
+      const v = document.createElement('video');
+      v.autoplay = true; v.playsinline = true; v.controls = true;
+      v.style.cssText = 'width:100%;border-radius:10px;max-height:220px;display:block';
+      v.src = adUrl;
+      slot.innerHTML = `<p class="ad-name" style="margin-bottom:8px">📢 ${esc(ad.name)}</p>`;
+      slot.appendChild(v);
+      v.play().catch(() => {});
+      v.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
     } else {
       // Audio publicitario → muestra nombre, reproduce en segundo plano
       slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
@@ -378,15 +366,6 @@ function initVideoMSE() {
   vid.addEventListener('canplay', function onCp() {
     vid.removeEventListener('canplay', onCp);
     vid.play().catch(() => {});
-  });
-
-  // Si el video se traba (stall), saltar al borde del buffer para recuperarse
-  vid.addEventListener('waiting', () => {
-    if (!screenBuf || screenBuf.buffered.length === 0) return;
-    const end = screenBuf.buffered.end(screenBuf.buffered.length - 1);
-    if (end - vid.currentTime > 0.5) {
-      vid.currentTime = end - 0.2;
-    }
   });
 }
 
