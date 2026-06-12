@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://com-heath-proud-collection.trycloudflare.com';
+const RADIO_SERVER = 'https://lit-rebecca-collectible-ensemble.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
