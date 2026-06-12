@@ -7,11 +7,12 @@
 const RADIO_SERVER = 'https://depot-nat-hayes-wyoming.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
-let socket    = null;
-let audio     = new Audio();
-let isPlaying = false;
-let liveMode  = false;
-let muted     = false;
+let socket       = null;
+let audio        = new Audio();
+let isPlaying    = false;
+let liveMode     = false;
+let muted        = false;
+let currentUrl   = null;
 
 let mse = null, mseBuf = null, mseQ = [];
 let screenMse = null, screenBuf = null, screenQ = [];
@@ -36,12 +37,15 @@ function connectSocket() {
   socket.on('state_sync', state => {
     if (state.currentTrack) {
       setTrack(state.currentTrack.name || '');
-      liveMode = !state.currentTrack.url;
-      setLive(liveMode);
-      if (!liveMode && isPlaying) {
-        audio.src = resolveUrl(state.currentTrack.url);
-        audio.play().catch(() => {});
+      if (state.currentTrack.url) {
+        liveMode = false;
+        currentUrl = resolveUrl(state.currentTrack.url);
+        audio.src = currentUrl;
+      } else {
+        liveMode = true;
+        currentUrl = null;
       }
+      setLive(liveMode);
     }
     if (state.playlist) renderPodcast(state.playlist);
   });
@@ -49,15 +53,19 @@ function connectSocket() {
   socket.on('track_change', ({ track }) => {
     if (track && track.url) {
       liveMode = false;
+      currentUrl = resolveUrl(track.url);
       setLive(false);
       teardownMSE();
       setTrack(track.name || track.url);
-      if (isPlaying) { audio.src = resolveUrl(track.url); audio.play().catch(() => {}); }
+      audio.src = currentUrl;
+      if (isPlaying) audio.play().catch(() => {});
     } else if (track) {
       liveMode = true;
+      currentUrl = null;
       setLive(true);
       setTrack(track.name || '🎙️ En Vivo');
       teardownMSE();
+      if (isPlaying) setupMSE(true);
     }
   });
 
@@ -109,8 +117,13 @@ function play() {
   btn.textContent = '⏸ Pausar';
   btn.classList.remove('paused');
   document.getElementById('trackEq').classList.add('active');
-  if (liveMode) { teardownMSE(); setupMSE(true); }
-  else { audio.play().catch(() => {}); }
+  if (liveMode) {
+    teardownMSE();
+    setupMSE(true);
+  } else {
+    if (currentUrl && audio.src !== currentUrl) audio.src = currentUrl;
+    audio.play().catch(() => {});
+  }
 }
 
 function pause() {
