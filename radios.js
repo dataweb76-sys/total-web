@@ -172,6 +172,13 @@ function connectSocket() {
     try { mseBufMic.appendBuffer(mseQMic.shift()); } catch(e) {}
   }
 
+  socket.on('video_stream_start', () => {
+    // Nuevo stream arrancando: resetear MSE para forzar reinicialización limpia
+    const vid = document.getElementById('vidEl');
+    if (vid) { vid.pause(); vid.src = ''; }
+    screenMse = null; screenBuf = null; screenQ = [];
+  });
+
   socket.on('screen_share_stop', () => {
     document.getElementById('camCard').classList.remove('visible');
     const vid = document.getElementById('vidEl');
@@ -324,6 +331,10 @@ function flushMSE() {
 
 // ── MSE video ─────────────────────────────
 function initVideoMSE() {
+  // Limpiar MSE viejo si ya cerró (sesión anterior sin screen_share_stop)
+  if (screenMse && screenMse.readyState !== 'open') {
+    screenMse = null; screenBuf = null; screenQ = [];
+  }
   if (screenMse) return;
   if (!window.MediaSource) return;
 
