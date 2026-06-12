@@ -98,6 +98,9 @@ function connectSocket() {
     const vid = document.getElementById('vidEl');
     vid.pause(); vid.src = '';
     screenMse = null; screenBuf = null; screenQ = [];
+    // Restaurar publicidad si estaba oculta
+    const slot = document.getElementById('adSlot');
+    if (slot) slot.style.display = '';
   });
 
   // ad_play: publicidad de la biblioteca (audio o video)
@@ -228,7 +231,7 @@ function initVideoMSE() {
   const wrap = document.getElementById('videoWrap');
 
   // Intentar los mimes en orden hasta encontrar uno soportado
-  const mimes = ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm'];
+  const mimes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
   const m = mimes.find(x => MediaSource.isTypeSupported(x));
   if (!m) return;
 
