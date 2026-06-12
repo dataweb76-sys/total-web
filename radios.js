@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'http://190.174.179.250:8001';
+const RADIO_SERVER = 'https://depot-nat-hayes-wyoming.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket    = null;
