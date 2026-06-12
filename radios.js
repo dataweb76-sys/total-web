@@ -220,7 +220,9 @@ function initVideoMSE() {
   const vid  = document.getElementById('vidEl');
   const card = document.getElementById('camCard');
 
-  const m = 'video/webm';
+  const mimes = ['video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
+  const m = mimes.find(x => MediaSource.isTypeSupported(x));
+  if (!m) return;
 
   card.classList.add('visible');
 
