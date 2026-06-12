@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://remind-screensavers-acute-financial.trycloudflare.com';
+const RADIO_SERVER = 'https://copyrighted-plane-sin-available.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
