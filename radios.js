@@ -95,7 +95,6 @@ function connectSocket() {
 
   socket.on('screen_share_stop', () => {
     document.getElementById('videoWrap').classList.remove('visible');
-    document.getElementById('adSlot').style.display = '';
     const vid = document.getElementById('vidEl');
     vid.pause(); vid.src = '';
     screenMse = null; screenBuf = null; screenQ = [];
@@ -234,7 +233,6 @@ function initVideoMSE() {
   if (!m) return;
 
   wrap.classList.add('visible');
-  document.getElementById('adSlot').style.display = 'none';
 
   screenMse = new MediaSource();
   const thisMs = screenMse;
@@ -272,6 +270,15 @@ function initVideoMSE() {
 function flushVideoNow() {
   if (!screenBuf || screenBuf.updating || screenQ.length === 0) return;
   try {
+    // Limpiar buffer viejo para evitar QuotaExceededError (video negro)
+    if (screenBuf.buffered.length > 0) {
+      const end = screenBuf.buffered.end(0);
+      const start = screenBuf.buffered.start(0);
+      if (end - start > 10) {
+        screenBuf.remove(start, end - 5);
+        return;
+      }
+    }
     const c = screenQ.shift();
     screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer);
   } catch(e) {}
