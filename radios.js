@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://flower-manhattan-along-petite.trycloudflare.com';
+const RADIO_SERVER = 'https://pointed-rochester-lots-tactics.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
