@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://lit-rebecca-collectible-ensemble.trycloudflare.com';
+const RADIO_SERVER = 'https://resolutions-occasional-certification-particularly.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
@@ -231,8 +231,7 @@ function initVideoMSE() {
   const wrap = document.getElementById('videoWrap');
 
   // Intentar los mimes en orden hasta encontrar uno soportado
-  const mimes = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
-  const m = mimes.find(x => MediaSource.isTypeSupported(x));
+  const m = 'video/webm';
   if (!m) return;
 
   wrap.classList.add('visible');
