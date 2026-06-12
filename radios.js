@@ -379,17 +379,28 @@ function initVideoMSE() {
     vid.removeEventListener('canplay', onCp);
     vid.play().catch(() => {});
   });
+
+  // Si el video se traba (stall), saltar al borde del buffer para recuperarse
+  vid.addEventListener('waiting', () => {
+    if (!screenBuf || screenBuf.buffered.length === 0) return;
+    const end = screenBuf.buffered.end(screenBuf.buffered.length - 1);
+    if (end - vid.currentTime > 0.5) {
+      vid.currentTime = end - 0.2;
+    }
+  });
 }
 
 function flushVideoNow() {
   if (!screenBuf || screenBuf.updating || screenQ.length === 0) return;
   try {
-    // Limpiar buffer viejo para evitar QuotaExceededError (video negro)
-    if (screenBuf.buffered.length > 0) {
-      const end = screenBuf.buffered.end(0);
+    // Solo borrar datos ANTERIORES al currentTime, nunca los que el video necesita ahora
+    const vid = document.getElementById('vidEl');
+    if (screenBuf.buffered.length > 0 && vid) {
       const start = screenBuf.buffered.start(0);
-      if (end - start > 10) {
-        screenBuf.remove(start, end - 5);
+      const ct = vid.currentTime;
+      const removeEnd = Math.max(start, ct - 1); // dejar 1s de colchón atrás
+      if (removeEnd > start + 0.5) {
+        screenBuf.remove(start, removeEnd);
         return;
       }
     }
