@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://hidden-vat-isolated-stickers.trycloudflare.com';
+const RADIO_SERVER = 'https://jelsoft-beads-interview-orientation.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
