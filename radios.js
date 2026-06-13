@@ -332,7 +332,7 @@ function flushMSE() {
 let screenStallHandler = null;
 
 function initVideoMSE() {
-  if (screenMse && screenMse.readyState !== 'open') {
+  if (screenMse && screenMse.readyState === 'ended') {
     screenMse = null; screenBuf = null; screenQ = [];
   }
   if (screenMse) return;
