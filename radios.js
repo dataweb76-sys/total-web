@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-const RADIO_SERVER = 'https://voters-headlines-pierre-epinions.trycloudflare.com';
+const RADIO_SERVER = 'https://beauty-retrieved-typing-barriers.trycloudflare.com';
 
 // â”€â”€ Estado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let socket       = null;
