@@ -55,10 +55,15 @@ function connectSocket() {
       liveMode = false;
       currentUrl = resolveUrl(track.url);
       setLive(false);
-      teardownMSE();
       setTrack(track.name || track.url);
-      if (isPlaying) crossfadeTo(currentUrl);
-      else audio.src = currentUrl;
+      if (isPlaying) {
+        // Limpiar estado MSE sin matar el audio (el crossfade lo va a ir bajando suave)
+        mse = null; mseBuf = null; mseQ = [];
+        crossfadeTo(currentUrl);
+      } else {
+        teardownMSE();
+        audio.src = currentUrl;
+      }
     } else if (track) {
       liveMode = true;
       currentUrl = null;
