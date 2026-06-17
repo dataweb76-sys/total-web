@@ -116,7 +116,7 @@
     .eq-bar:nth-child(2) { animation-delay: .15s; }
     .eq-bar:nth-child(3) { animation-delay: .3s; }
     @keyframes eq { from{height:4px} to{height:16px} }
-    .track-name { font-size: .88rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-name { font-size: .88rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
 
     .player-controls { display: flex; align-items: center; gap: 10px; }
     .btn-play-main {
@@ -209,7 +209,7 @@
       font-size: .7rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
     }
-    .ep-name { font-size: .82rem; font-weight: 500; color: var(--text); }
+    .ep-name { font-size: .82rem; font-weight: 500; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .ep-empty { font-size: .8rem; color: var(--text-muted); text-align: center; padding: 10px 0; }
 
     /* CÁMARA EN VIVO */
@@ -305,6 +305,16 @@
   <!-- ══ CONTENIDO ══ -->
   <section class="section" style="padding-top:0">
     <div class="container">
+
+      <!-- CÁMARA EN VIVO — full width, encima del grid -->
+      <div class="cam-card" id="camCard" style="max-width:860px;margin:0 auto 16px">
+        <div class="cam-header">
+          <div class="cam-live-dot"></div>
+          <span>En vivo</span>
+        </div>
+        <video id="vidEl" autoplay playsinline muted></video>
+      </div>
+
       <div class="radio-grid">
 
         <!-- ── COLUMNA PRINCIPAL ── -->
@@ -383,15 +393,6 @@
 
         <!-- ── COLUMNA DERECHA ── -->
         <div class="radio-col-right">
-
-          <!-- CÁMARA EN VIVO -->
-          <div class="cam-card" id="camCard">
-            <div class="cam-header">
-              <div class="cam-live-dot"></div>
-              <span>En vivo</span>
-            </div>
-            <video id="vidEl" autoplay playsinline muted></video>
-          </div>
 
           <!-- DONACIONES -->
           <div class="r-card">
