@@ -59,48 +59,6 @@
       padding-bottom: 60px;
       align-items: start;
     }
-    @media (max-width: 860px) {
-      .radio-grid { grid-template-columns: 1fr; }
-      .radio-col-right { order: 10; }
-    }
-    @media (max-width: 640px) {
-      /* Hero mínimo */
-      .radio-hero { padding: 58px 0 8px; }
-      .radio-hero h1 { font-size: 1.2rem; }
-      .radio-hero p, #btnInstall { display: none; }
-      /* Grid sin gap ni padding */
-      .radio-grid { gap: 0; padding-bottom: 12px; }
-      /* Cards compactos */
-      .r-card { padding: 10px 12px; margin-bottom: 8px; border-radius: 12px; }
-      .r-card-title { font-size: .65rem; margin-bottom: 8px; }
-      /* Player */
-      .player-top { gap: 8px; margin-bottom: 8px; }
-      .player-icon { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 8px; }
-      .player-meta h2 { font-size: .85rem; }
-      .player-conn { font-size: .68rem; }
-      .conn-dot { width: 6px; height: 6px; }
-      .live-badge { font-size: .6rem; padding: 2px 5px; }
-      .track-box { padding: 7px 10px; margin-bottom: 8px; min-height: 32px; }
-      .track-name { font-size: .78rem; }
-      .player-controls { gap: 8px; }
-      .btn-play-main { padding: 9px; font-size: .82rem; min-height: 38px; }
-      .vol-wrap input { width: 56px; }
-      /* Publicidad */
-      .ad-slot { min-height: 64px; padding: 10px; }
-      .ad-slot span:first-child { font-size: 1.2rem !important; }
-      /* Chat */
-      .chat-messages { height: 130px; }
-      .chat-name { width: 70px; }
-      /* Ocultar playlist en mobile */
-      .mobile-hide { display: none !important; }
-      /* Columna derecha va al final (donaciones, whatsapp) */
-      .radio-col-right { order: 10; }
-      /* Compactar donaciones en mobile */
-      .donate-options { gap: 5px; }
-      .donate-opt { padding: 8px 4px; font-size: .8rem; }
-      .donate-custom input { padding: 8px; font-size: .82rem; }
-      .btn-donate { padding: 10px; font-size: .85rem; }
-    }
 
     /* CARDS */
     .r-card {
@@ -303,6 +261,47 @@
     }
     .btn-wa:hover { opacity: .88; }
     .btn-wa svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+    /* ── RESPONSIVE MOBILE (al final para pisar las reglas base) ── */
+    @media (max-width: 860px) {
+      .radio-grid { grid-template-columns: 1fr; }
+      .radio-col-right { order: 10; }
+    }
+    @media (max-width: 640px) {
+      .radio-hero { display: none; }
+      .section { padding-top: 0 !important; }
+      .container { padding: 0 10px; }
+      .radio-grid { gap: 0; padding-bottom: 16px; padding-top: 60px; }
+      .r-card { padding: 10px 12px; margin-bottom: 6px; border-radius: 10px; }
+      .r-card-title { font-size: .62rem; margin-bottom: 8px; letter-spacing: .05em; }
+      .player-top { gap: 8px; margin-bottom: 8px; }
+      .player-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 8px; }
+      .player-meta h2 { font-size: .82rem; }
+      .player-conn { font-size: .66rem; margin-top: 2px; }
+      .conn-dot { width: 6px; height: 6px; }
+      .live-badge { font-size: .58rem; padding: 2px 5px; }
+      .track-box { padding: 6px 10px; margin-bottom: 8px; min-height: 30px; border-radius: 8px; }
+      .track-name { font-size: .76rem; }
+      .player-controls { gap: 6px; }
+      .btn-play-main { padding: 8px; font-size: .8rem; min-height: 36px; border-radius: 10px; }
+      .vol-wrap input { width: 52px; }
+      .vol-wrap span { font-size: .95rem; }
+      .ad-slot { min-height: 52px; padding: 8px; gap: 4px; border-radius: 8px; font-size: .75rem; }
+      #vidEl { min-height: 120px; }
+      .cam-card { margin-bottom: 6px; border-radius: 10px; }
+      .chat-messages { height: 110px; padding: 8px; }
+      .chat-msg { font-size: .78rem; }
+      .chat-name { width: 64px; padding: 7px 6px; font-size: .74rem; }
+      .chat-input { padding: 7px 8px; font-size: .78rem; }
+      .chat-send { padding: 7px 10px; font-size: .9rem; min-width: 36px; }
+      .mobile-hide { display: none !important; }
+      .donate-options { gap: 4px; }
+      .donate-opt { padding: 7px 3px; font-size: .75rem; }
+      .donate-opt strong { font-size: .88rem; }
+      .donate-custom input { padding: 7px 10px; font-size: .8rem; }
+      .btn-donate { padding: 9px; font-size: .82rem; min-height: 38px; }
+      .donate-note { font-size: .68rem; }
+    }
   </style>
 </head>
 <body>
