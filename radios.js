@@ -351,8 +351,8 @@ function initVideoMSE() {
   const card = document.getElementById('camCard');
   if (!vid || !card) return;
 
-  const m = 'video/webm';
-  if (!MediaSource.isTypeSupported(m)) return;
+  const mimes = ['video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
+  const m = mimes.find(x => MediaSource.isTypeSupported(x));
   if (!m) return;
 
   card.classList.add('visible');
