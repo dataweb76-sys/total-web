@@ -61,28 +61,45 @@
     }
     @media (max-width: 860px) {
       .radio-grid { grid-template-columns: 1fr; }
-      .radio-col-right { display: none; } /* donaciones/whatsapp ocultos en mobile */
+      .radio-col-right { order: 10; }
     }
-    /* Mobile compacto */
     @media (max-width: 640px) {
-      .radio-hero { padding: 64px 0 12px; }
-      .radio-hero h1 { font-size: 1.3rem; }
-      .radio-hero p  { font-size: .82rem; margin-top: 3px; }
-      .r-card { padding: 12px 14px; margin-bottom: 10px; }
-      .r-card-title { margin-bottom: 10px; }
-      .radio-grid { padding-bottom: 20px; gap: 0; }
-      /* Player compacto */
-      .player-top { gap: 10px; margin-bottom: 10px; }
-      .player-icon { width: 44px; height: 44px; font-size: 1.3rem; }
-      .player-meta h2 { font-size: .9rem; }
-      .player-conn { font-size: .7rem; }
-      .live-badge { font-size: .62rem; padding: 3px 6px; }
-      .track-box { padding: 8px 10px; margin-bottom: 10px; min-height: 36px; }
-      .track-name { font-size: .8rem; }
-      .btn-play-main { padding: 10px; font-size: .85rem; min-height: 40px; }
-      .vol-wrap input { width: 60px; }
-      /* Chat compacto */
-      .chat-messages { height: 160px; }
+      /* Hero mínimo */
+      .radio-hero { padding: 58px 0 8px; }
+      .radio-hero h1 { font-size: 1.2rem; }
+      .radio-hero p, #btnInstall { display: none; }
+      /* Grid sin gap ni padding */
+      .radio-grid { gap: 0; padding-bottom: 12px; }
+      /* Cards compactos */
+      .r-card { padding: 10px 12px; margin-bottom: 8px; border-radius: 12px; }
+      .r-card-title { font-size: .65rem; margin-bottom: 8px; }
+      /* Player */
+      .player-top { gap: 8px; margin-bottom: 8px; }
+      .player-icon { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 8px; }
+      .player-meta h2 { font-size: .85rem; }
+      .player-conn { font-size: .68rem; }
+      .conn-dot { width: 6px; height: 6px; }
+      .live-badge { font-size: .6rem; padding: 2px 5px; }
+      .track-box { padding: 7px 10px; margin-bottom: 8px; min-height: 32px; }
+      .track-name { font-size: .78rem; }
+      .player-controls { gap: 8px; }
+      .btn-play-main { padding: 9px; font-size: .82rem; min-height: 38px; }
+      .vol-wrap input { width: 56px; }
+      /* Publicidad */
+      .ad-slot { min-height: 64px; padding: 10px; }
+      .ad-slot span:first-child { font-size: 1.2rem !important; }
+      /* Chat */
+      .chat-messages { height: 130px; }
+      .chat-name { width: 70px; }
+      /* Ocultar playlist en mobile */
+      .mobile-hide { display: none !important; }
+      /* Columna derecha va al final (donaciones, whatsapp) */
+      .radio-col-right { order: 10; }
+      /* Compactar donaciones en mobile */
+      .donate-options { gap: 5px; }
+      .donate-opt { padding: 8px 4px; font-size: .8rem; }
+      .donate-custom input { padding: 8px; font-size: .82rem; }
+      .btn-donate { padding: 10px; font-size: .85rem; }
     }
 
     /* CARDS */
@@ -402,7 +419,7 @@
           </div>
 
           <!-- PLAYLIST / PODCAST -->
-          <div class="r-card">
+          <div class="r-card mobile-hide">
             <div class="r-card-title">🎧 Podcast / Playlist</div>
             <div id="podcastList">
               <div class="ep-empty">No hay episodios cargados aún.</div>
