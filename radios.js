@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://writes-just-loving-eden.trycloudflare.com';
+const RADIO_SERVER = 'https://pipeline-properties-vinyl-criticism.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
