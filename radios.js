@@ -396,6 +396,14 @@ function initVideoMSE() {
     vid.removeEventListener('canplay', onCp);
     vid.play().catch(() => {});
   });
+
+  // Watchdog: cada 800ms forzar play si hay buffer pero está pausado
+  const watchdog = setInterval(() => {
+    if (screenMse !== thisMs) { clearInterval(watchdog); return; }
+    if (vid.paused && screenBuf && screenBuf.buffered.length > 0) {
+      vid.play().catch(() => {});
+    }
+  }, 800);
 }
 
 function flushVideoNow() {
@@ -418,6 +426,9 @@ function flushVideoNow() {
     }
     const c = screenQ.shift();
     screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer);
+    // Forzar play en mobile donde autoplay a veces no dispara
+    const vid2 = document.getElementById('vidEl');
+    if (vid2 && vid2.paused && vid2.readyState >= 2) vid2.play().catch(() => {});
   } catch(e) {
     if (e.name === 'QuotaExceededError') {
       screenQ.length = 0;
