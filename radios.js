@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://monica-conditional-kitty-delegation.trycloudflare.com';
+const RADIO_SERVER = 'https://activated-inner-walk-separate.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
