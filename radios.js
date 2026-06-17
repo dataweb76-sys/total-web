@@ -347,7 +347,7 @@ function initVideoMSE() {
   const card = document.getElementById('camCard');
   if (!vid || !card) return;
 
-  const mimes = ['video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
+  const mimes = ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
   const m = mimes.find(x => MediaSource.isTypeSupported(x));
   if (!m) return;
 
