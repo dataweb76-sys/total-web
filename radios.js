@@ -401,22 +401,20 @@ function flushVideoNow() {
       const bufEnd   = screenBuf.buffered.end(0);
       const bufStart = screenBuf.buffered.start(0);
       const ct       = vid.currentTime;
-      // Si el video está muy atrasado respecto al buffer, saltar al frente
-      if (bufEnd - ct > 3) {
-        vid.currentTime = bufEnd - 0.1;
-      }
-      // Limpiar datos ya reproducidos
-      const removeEnd = Math.max(bufStart, ct - 1);
-      if (removeEnd > bufStart + 0.5) {
-        screenBuf.remove(bufStart, removeEnd);
-        return;
+      if (bufEnd - ct > 3) vid.currentTime = bufEnd - 0.1;
+      // Solo limpiar cuando el buffer acumula >10s para no interrumpir el append
+      if (bufEnd - bufStart > 10) {
+        const removeEnd = Math.max(bufStart, ct - 2);
+        if (removeEnd > bufStart + 1) {
+          screenBuf.remove(bufStart, removeEnd);
+          return;
+        }
       }
     }
     const c = screenQ.shift();
     screenBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer);
   } catch(e) {
     if (e.name === 'QuotaExceededError') {
-      // Buffer lleno: descartar cola y vaciar buffer para recuperar
       screenQ.length = 0;
       if (!screenBuf.updating && screenBuf.buffered.length > 0) {
         try { screenBuf.remove(screenBuf.buffered.start(0), screenBuf.buffered.end(0)); } catch(_) {}
