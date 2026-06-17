@@ -39,8 +39,12 @@ function connectSocket() {
       setTrack(state.currentTrack.name || '');
       if (state.currentTrack.url) {
         liveMode = false;
-        currentUrl = resolveUrl(state.currentTrack.url);
-        audio.src = currentUrl;
+        const newUrl = resolveUrl(state.currentTrack.url);
+        // Solo actualizar src si no está reproduciendo ya esta misma pista
+        if (!isPlaying || currentUrl !== newUrl) {
+          currentUrl = newUrl;
+          if (!isPlaying) audio.src = currentUrl;
+        }
       } else {
         liveMode = true;
         currentUrl = null;
@@ -347,8 +351,8 @@ function initVideoMSE() {
   const card = document.getElementById('camCard');
   if (!vid || !card) return;
 
-  const mimes = ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm'];
-  const m = mimes.find(x => MediaSource.isTypeSupported(x));
+  const m = 'video/webm';
+  if (!MediaSource.isTypeSupported(m)) return;
   if (!m) return;
 
   card.classList.add('visible');
