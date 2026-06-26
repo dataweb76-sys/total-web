@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://regulations-present-entities-climbing.trycloudflare.com';
+const RADIO_SERVER = 'https://stroke-surprise-puerto-development.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
