@@ -92,6 +92,7 @@ function connectSocket() {
   });
 
   socket.on('chat_message', msg => appendChat(msg.user || msg.name, msg.text));
+  socket.on('news_update', noticias => { _twNoticias = noticias; twRender(''); });
 
   socket.on('video_chunk', chunk => {
     initVideoMSE();
@@ -532,10 +533,10 @@ function initClima() {
         const w = d.current_weather;
         const desc = _WMO[w.weathercode] || 'Clima';
         const hIdx = d.hourly.time.findIndex(t => t.startsWith(new Date().toISOString().slice(0,13)));
-        const hum = hIdx >= 0 ? d.hourly.relativehumidity_2m[hIdx] : 'â€”';
-        el.innerHTML = `<div class="tw-temp">${Math.round(w.temperature)}Â°C</div>
-          <div class="tw-desc">${desc}</div>
-          <div class="tw-meta">${city} Â· Viento ${w.windspeed} km/h Â· Hum ${hum}%</div>`;
+        const hum = hIdx >= 0 ? d.hourly.relativehumidity_2m[hIdx] : '-';
+        el.innerHTML = `<div class=”tw-temp”>${Math.round(w.temperature)}°C</div>
+          <div class=”tw-desc”>${desc}</div>
+          <div class=”tw-meta”>${city} · Viento ${w.windspeed} km/h · Hum ${hum}%</div>`;
       }).catch(() => { el.innerHTML = '<div class="tw-meta">No se pudo obtener el clima</div>'; });
   };
   if (navigator.geolocation) {
