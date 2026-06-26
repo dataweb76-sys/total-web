@@ -1,12 +1,12 @@
-/* ══════════════════════════════════════════
-   Radio Pampa AR — radios.js
-   Cambiá RADIO_SERVER por la URL del túnel
+﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Radio Pampa AR â€” radios.js
+   CambiÃ¡ RADIO_SERVER por la URL del tÃºnel
    Cloudflare cuando lo tengas activo.
-   ══════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 const RADIO_SERVER = 'https://website-imported-medicines-interactions.trycloudflare.com';
 
-// ── Estado ────────────────────────────────
+// â”€â”€ Estado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let socket       = null;
 let audio        = new Audio();
 let isPlaying    = false;
@@ -19,12 +19,12 @@ let screenMse = null, screenBuf = null, screenQ = [];
 
 let donateAmount = 1000;
 
-// ── Init ──────────────────────────────────
+// â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (function init() {
   const script = document.createElement('script');
   script.src = RADIO_SERVER + '/socket.io/socket.io.js';
   script.onload  = connectSocket;
-  script.onerror = () => setConn(false, 'Sin conexión al servidor');
+  script.onerror = () => setConn(false, 'Sin conexiÃ³n al servidor');
   document.head.appendChild(script);
 })();
 
@@ -40,7 +40,7 @@ function connectSocket() {
       if (state.currentTrack.url) {
         liveMode = false;
         const newUrl = resolveUrl(state.currentTrack.url);
-        // Solo actualizar src si no está reproduciendo ya esta misma pista
+        // Solo actualizar src si no estÃ¡ reproduciendo ya esta misma pista
         if (!isPlaying || currentUrl !== newUrl) {
           currentUrl = newUrl;
           if (!isPlaying) audio.src = currentUrl;
@@ -72,7 +72,7 @@ function connectSocket() {
       liveMode = true;
       currentUrl = null;
       setLive(true);
-      setTrack(track.name || '🎙️ En Vivo');
+      setTrack(track.name || 'ðŸŽ™ï¸ En Vivo');
     }
   });
 
@@ -81,7 +81,7 @@ function connectSocket() {
   socket.on('live_audio_chunk', chunk => {
     if (!liveMode || !isPlaying) return;
     if (!mse) {
-      // Primer chunk: recién acá cortamos la música y arrancamos MSE
+      // Primer chunk: reciÃ©n acÃ¡ cortamos la mÃºsica y arrancamos MSE
       audio.pause();
       audio.src = '';
       teardownMSE();
@@ -113,11 +113,11 @@ function connectSocket() {
     if (sl) sl.value = audio.volume;
   });
 
-  // ── Podcast mic: canal separado sobre la música ────────
+  // â”€â”€ Podcast mic: canal separado sobre la mÃºsica â”€â”€â”€â”€â”€â”€â”€â”€
   let audioMic = null, mseMic = null, mseBufMic = null, mseQMic = [];
 
   socket.on('podcast_start', ({ duck, name }) => {
-    // Bajar música sin cortarla
+    // Bajar mÃºsica sin cortarla
     const vol = Math.min(1, Math.max(0, Number(duck) || 0.3));
     audio.volume = vol;
     const sl = document.getElementById('volSlider');
@@ -153,7 +153,7 @@ function connectSocket() {
     mseMic = new MediaSource();
     const thisMse = mseMic;
     audioMic.src = URL.createObjectURL(mseMic);
-    // Intentar play de inmediato para heredar el contexto de audio activo de la página
+    // Intentar play de inmediato para heredar el contexto de audio activo de la pÃ¡gina
     audioMic.play().catch(() => {});
     const mime = 'audio/webm;codecs=opus';
     mseMic.addEventListener('sourceopen', () => {
@@ -166,7 +166,7 @@ function connectSocket() {
     });
     audioMic.addEventListener('canplay', () => audioMic.play().catch(() => {}));
     audioMic.addEventListener('pause', () => {
-      // Si el browser pausó por política de autoplay, reintentar
+      // Si el browser pausÃ³ por polÃ­tica de autoplay, reintentar
       if (mseBufMic) audioMic.play().catch(() => {});
     });
   }
@@ -194,7 +194,7 @@ function connectSocket() {
     screenMse = null; screenBuf = null; screenQ = [];
   });
 
-  const AD_SLOT_DEFAULT = `<span style="font-size:1.8rem">📡</span><span>Espacio publicitario</span><span style="font-size:.72rem">Contactanos para publicitar en la radio</span>`;
+  const AD_SLOT_DEFAULT = `<span style="font-size:1.8rem">ðŸ“¡</span><span>Espacio publicitario</span><span style="font-size:.72rem">Contactanos para publicitar en la radio</span>`;
 
   // ad_play: publicidad de la biblioteca (audio o video)
   socket.on('ad_play', ad => {
@@ -207,13 +207,13 @@ function connectSocket() {
       v.autoplay = true; v.playsinline = true; v.controls = true;
       v.style.cssText = 'width:100%;border-radius:10px;max-height:220px;display:block';
       v.src = adUrl;
-      slot.innerHTML = `<p class="ad-name" style="margin-bottom:8px">📢 ${esc(ad.name)}</p>`;
+      slot.innerHTML = `<p class="ad-name" style="margin-bottom:8px">ðŸ“¢ ${esc(ad.name)}</p>`;
       slot.appendChild(v);
       v.play().catch(() => {});
       v.onended = () => { slot.innerHTML = AD_SLOT_DEFAULT; };
     } else {
-      // Audio publicitario → muestra nombre, reproduce en segundo plano
-      slot.innerHTML = `<span style="font-size:2rem">📢</span><p class="ad-name">${esc(ad.name)}</p>`;
+      // Audio publicitario â†’ muestra nombre, reproduce en segundo plano
+      slot.innerHTML = `<span style="font-size:2rem">ðŸ“¢</span><p class="ad-name">${esc(ad.name)}</p>`;
       const adAudio = new Audio(adUrl);
       adAudio.volume = audio.volume;
       adAudio.play().catch(() => {});
@@ -232,7 +232,7 @@ function connectSocket() {
   });
 }
 
-// ── Player ────────────────────────────────
+// â”€â”€ Player â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function togglePlay() {
   if (isPlaying) pause(); else play();
 }
@@ -240,7 +240,7 @@ function togglePlay() {
 function play() {
   isPlaying = true;
   const btn = document.getElementById('btnPlay');
-  btn.textContent = '⏸ Pausar';
+  btn.textContent = 'â¸ Pausar';
   btn.classList.remove('paused');
   document.getElementById('trackEq').classList.add('active');
   if (liveMode) {
@@ -255,7 +255,7 @@ function play() {
 function pause() {
   isPlaying = false;
   const btn = document.getElementById('btnPlay');
-  btn.textContent = '▶ Escuchar';
+  btn.textContent = 'â–¶ Escuchar';
   btn.classList.add('paused');
   document.getElementById('trackEq').classList.remove('active');
   audio.pause();
@@ -265,16 +265,16 @@ function pause() {
 function setVol(v) {
   audio.volume = parseFloat(v);
   muted = false;
-  document.getElementById('volIcon').textContent = v > 0 ? '🔊' : '🔇';
+  document.getElementById('volIcon').textContent = v > 0 ? 'ðŸ”Š' : 'ðŸ”‡';
 }
 
 function toggleMute() {
   muted = !muted;
   audio.muted = muted;
-  document.getElementById('volIcon').textContent = muted ? '🔇' : '🔊';
+  document.getElementById('volIcon').textContent = muted ? 'ðŸ”‡' : 'ðŸ”Š';
 }
 
-// ── Crossfade ─────────────────────────────
+// â”€â”€ Crossfade â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function crossfadeTo(url) {
   const next = new Audio();
   next.volume = 0;
@@ -303,7 +303,7 @@ function crossfadeTo(url) {
   }, TICK);
 }
 
-// ── MSE audio ─────────────────────────────
+// â”€â”€ MSE audio â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setupMSE(autoplay = false) {
   if (!window.MediaSource || mse) return;
   mse = new MediaSource();
@@ -337,7 +337,7 @@ function flushMSE() {
   try { const c = mseQ.shift(); mseBuf.appendBuffer(c instanceof ArrayBuffer ? c : c.buffer); } catch(e) {}
 }
 
-// ── MSE video ─────────────────────────────
+// â”€â”€ MSE video â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let screenStallHandler = null;
 
 function initVideoMSE() {
@@ -401,7 +401,7 @@ function initVideoMSE() {
     vid.play().catch(() => {});
   });
 
-  // Watchdog: cada 800ms forzar play si hay buffer pero está pausado
+  // Watchdog: cada 800ms forzar play si hay buffer pero estÃ¡ pausado
   const watchdog = setInterval(() => {
     if (screenMse !== thisMs) { clearInterval(watchdog); return; }
     if (vid.paused && screenBuf && screenBuf.buffered.length > 0) {
@@ -443,7 +443,7 @@ function flushVideoNow() {
   }
 }
 
-// ── Chat ──────────────────────────────────
+// â”€â”€ Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function sendChat(e) {
   e.preventDefault();
   const input = document.getElementById('chatInput');
@@ -465,7 +465,7 @@ function appendChat(name, text) {
   box.scrollTop = box.scrollHeight;
 }
 
-// ── Donaciones ────────────────────────────
+// â”€â”€ Donaciones â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function selectAmount(val) {
   donateAmount = val;
   document.getElementById('donateAmount').value = val;
@@ -475,12 +475,12 @@ function selectAmount(val) {
 
 function openDonation() {
   const amount = parseInt(document.getElementById('donateAmount').value) || donateAmount;
-  // Reemplazá con tu link de Mercado Pago o el webhook que prefieras
-  const waMsg = encodeURIComponent(`Hola! Quiero donar $${amount} a Radio Pampa AR 💜`);
+  // ReemplazÃ¡ con tu link de Mercado Pago o el webhook que prefieras
+  const waMsg = encodeURIComponent(`Hola! Quiero donar $${amount} a Radio Pampa AR ðŸ’œ`);
   window.open(`https://wa.me/5492954320639?text=${waMsg}`, '_blank');
 }
 
-// ── Podcast ───────────────────────────────
+// â”€â”€ Podcast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderPodcast(playlist) {
   const list = document.getElementById('podcastList');
   if (!playlist || playlist.length === 0) return;
@@ -492,7 +492,7 @@ function renderPodcast(playlist) {
   `).join('');
 }
 
-// ── UI helpers ────────────────────────────
+// â”€â”€ UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setConn(on, txt) {
   document.getElementById('connDot').classList.toggle('on', on);
   document.getElementById('connText').textContent = txt;
@@ -502,7 +502,7 @@ function setConn(on, txt) {
 }
 
 function setTrack(name) {
-  document.getElementById('trackName').textContent = name || '—';
+  document.getElementById('trackName').textContent = name || 'â€”';
 }
 
 function setLive(on) {
@@ -520,8 +520,8 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── Clima / Dólar / Noticias ──────────────
-const _WMO = {0:'Despejado ☀️',1:'Casi despejado 🌤️',2:'Parcialmente nublado ⛅',3:'Nublado ☁️',45:'Niebla 🌫️',48:'Niebla con escarcha 🌫️',51:'Llovizna ligera 🌦️',53:'Llovizna moderada 🌦️',55:'Llovizna densa 🌧️',61:'Lluvia ligera 🌧️',63:'Lluvia moderada 🌧️',65:'Lluvia intensa 🌧️',71:'Nieve ligera 🌨️',73:'Nieve moderada 🌨️',75:'Nieve intensa ❄️',80:'Chaparrones ligeros 🌦️',81:'Chaparrones moderados 🌧️',82:'Chaparrones intensos ⛈️',85:'Nevadas ligeras 🌨️',86:'Nevadas intensas ❄️',95:'Tormenta ⛈️',96:'Tormenta con granizo ⛈️',99:'Tormenta con granizo fuerte ⛈️'};
+// â”€â”€ Clima / DÃ³lar / Noticias â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const _WMO = {0:'Despejado â˜€ï¸',1:'Casi despejado ðŸŒ¤ï¸',2:'Parcialmente nublado â›…',3:'Nublado â˜ï¸',45:'Niebla ðŸŒ«ï¸',48:'Niebla con escarcha ðŸŒ«ï¸',51:'Llovizna ligera ðŸŒ¦ï¸',53:'Llovizna moderada ðŸŒ¦ï¸',55:'Llovizna densa ðŸŒ§ï¸',61:'Lluvia ligera ðŸŒ§ï¸',63:'Lluvia moderada ðŸŒ§ï¸',65:'Lluvia intensa ðŸŒ§ï¸',71:'Nieve ligera ðŸŒ¨ï¸',73:'Nieve moderada ðŸŒ¨ï¸',75:'Nieve intensa â„ï¸',80:'Chaparrones ligeros ðŸŒ¦ï¸',81:'Chaparrones moderados ðŸŒ§ï¸',82:'Chaparrones intensos â›ˆï¸',85:'Nevadas ligeras ðŸŒ¨ï¸',86:'Nevadas intensas â„ï¸',95:'Tormenta â›ˆï¸',96:'Tormenta con granizo â›ˆï¸',99:'Tormenta con granizo fuerte â›ˆï¸'};
 
 function initClima() {
   const el = document.getElementById('twClima');
@@ -532,10 +532,10 @@ function initClima() {
         const w = d.current_weather;
         const desc = _WMO[w.weathercode] || 'Clima';
         const hIdx = d.hourly.time.findIndex(t => t.startsWith(new Date().toISOString().slice(0,13)));
-        const hum = hIdx >= 0 ? d.hourly.relativehumidity_2m[hIdx] : '—';
-        el.innerHTML = `<div class="tw-temp">${Math.round(w.temperature)}°C</div>
+        const hum = hIdx >= 0 ? d.hourly.relativehumidity_2m[hIdx] : 'â€”';
+        el.innerHTML = `<div class="tw-temp">${Math.round(w.temperature)}Â°C</div>
           <div class="tw-desc">${desc}</div>
-          <div class="tw-meta">${city} · Viento ${w.windspeed} km/h · Hum ${hum}%</div>`;
+          <div class="tw-meta">${city} Â· Viento ${w.windspeed} km/h Â· Hum ${hum}%</div>`;
       }).catch(() => { el.innerHTML = '<div class="tw-meta">No se pudo obtener el clima</div>'; });
   };
   if (navigator.geolocation) {
@@ -599,18 +599,19 @@ function twRender(cat) {
   const el = document.getElementById('twNewsList');
   if (!el) return;
   const items = cat ? _twNoticias.filter(n => n.categoria === cat) : _twNoticias;
-  if (!items.length) { el.innerHTML = '<p style="color:#888;font-size:.82rem">Sin noticias en esta categoría</p>'; return; }
+  if (!items.length) { el.innerHTML = '<p style="color:#888;font-size:.82rem">Sin noticias en esta categorÃ­a</p>'; return; }
   el.innerHTML = items.map(n => `
     <a class="tw-ni cat-${n.categoria||'nacional'}" href="${n.link||'#'}" target="_blank" rel="noopener">
-      <div class="tw-ni-meta">${n.fuente||''} · ${n.categoria||''}</div>
+      <div class="tw-ni-meta">${n.fuente||''} Â· ${n.categoria||''}</div>
       <div class="tw-ni-title">${n.titulo||n.title||''}</div>
-      ${(n.resumen||n.description) ? `<div class="tw-ni-desc">${(n.resumen||n.description).slice(0,120)}…</div>` : ''}
+      ${(n.resumen||n.description) ? `<div class="tw-ni-desc">${(n.resumen||n.description).slice(0,120)}â€¦</div>` : ''}
     </a>`).join('');
 }
 
-// ── Arrancar al cargar ──
+// â”€â”€ Arrancar al cargar â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
   initClima();
   loadDolar();
   loadNoticias();
 });
+
