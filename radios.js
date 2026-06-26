@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://livecam-adjacent-continuous-acoustic.trycloudflare.com';
+const RADIO_SERVER = 'https://turn-verification-finance-feb.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
