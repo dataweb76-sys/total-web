@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://stephanie-cook-treasures-message.trycloudflare.com';
+const RADIO_SERVER = 'https://website-imported-medicines-interactions.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
