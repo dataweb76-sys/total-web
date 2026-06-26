@@ -581,7 +581,7 @@ function loadNoticias() {
   const el  = document.getElementById('twNewsList');
   fetch(RADIO_SERVER + '/api/news')
     .then(r => r.json()).then(d => {
-      _twNoticias = d;
+      _twNoticias = d.noticias || d;
       twRender('');
       if (upd) upd.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
     }).catch(() => {
@@ -599,12 +599,12 @@ function twRender(cat) {
   const el = document.getElementById('twNewsList');
   if (!el) return;
   const items = cat ? _twNoticias.filter(n => n.categoria === cat) : _twNoticias;
-  if (!items.length) { el.innerHTML = '<p style="color:#888;font-size:.82rem">Sin noticias en esta categorÃ­a</p>'; return; }
+  if (!items.length) { el.innerHTML = '<p style="color:#888;font-size:.82rem">Sin noticias en esta categoria</p>'; return; }
   el.innerHTML = items.map(n => `
-    <a class="tw-ni cat-${n.categoria||'nacional'}" href="${n.link||'#'}" target="_blank" rel="noopener">
-      <div class="tw-ni-meta">${n.fuente||''} Â· ${n.categoria||''}</div>
+    <a class="tw-ni cat-${n.categoria||'nacional'}" href="${n.url||n.link||'#'}" target="_blank" rel="noopener">
+      <div class="tw-ni-meta">${n.fuente||''} - ${n.categoria||''}</div>
       <div class="tw-ni-title">${n.titulo||n.title||''}</div>
-      ${(n.resumen||n.description) ? `<div class="tw-ni-desc">${(n.resumen||n.description).slice(0,120)}â€¦</div>` : ''}
+      ${(n.resumen||n.description) ? `<div class="tw-ni-desc">${(n.resumen||n.description).slice(0,120)}...</div>` : ''}
     </a>`).join('');
 }
 
