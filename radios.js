@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://turn-verification-finance-feb.trycloudflare.com';
+const RADIO_SERVER = 'https://demographic-sugar-divided-cir.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
