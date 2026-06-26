@@ -575,41 +575,18 @@ function loadDolar() {
     }).catch(() => { el.innerHTML = '<div class="tw-meta">No disponible</div>'; });
 }
 
-const _RSS_FEEDS = [
-  {url:'https://www.laarena.com.ar/rss.xml',          fuente:'La Arena',          categoria:'local'},
-  {url:'https://www.eldiariolapampa.com.ar/feed/',    fuente:'El Diario',         categoria:'provincial'},
-  {url:'https://pampadiario.com/feed/',               fuente:'Pampa Diario',      categoria:'provincial'},
-  {url:'https://www.lapampaonline.com.ar/feed/',      fuente:'LP Online',         categoria:'provincial'},
-  {url:'https://www.clarin.com/rss/lo-ultimo/',       fuente:'Clarín',            categoria:'nacional'},
-  {url:'https://www.lanacion.com.ar/arc/outboundfeeds/rss/', fuente:'La Nación',  categoria:'nacional'},
-  {url:'https://www.infobae.com/feeds/rss/',          fuente:'Infobae',           categoria:'nacional'},
-  {url:'https://www.ole.com.ar/rss/lo-ultimo/',       fuente:'Olé',               categoria:'deportes'},
-];
-const _CORS = 'https://corsproxy.io/?';
-
 let _twNoticias = [];
 function loadNoticias() {
   const upd = document.getElementById('twNewsUpd');
   const el  = document.getElementById('twNewsList');
-  const results = [];
-  let pending = _RSS_FEEDS.length;
-  _RSS_FEEDS.forEach(feed => {
-    fetch(_CORS + encodeURIComponent(feed.url))
-      .then(r => r.text()).then(xml => {
-        const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0,3);
-        items.forEach(m => {
-          const g = (tag) => { const x = m[1].match(new RegExp('<'+tag+'[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?<\\/'+tag+'>')); return x ? x[1].trim() : ''; };
-          results.push({title: g('title'), link: g('link'), description: g('description').replace(/<[^>]+>/g,'').slice(0,160), fuente: feed.fuente, categoria: feed.categoria});
-        });
-      }).catch(()=>{}).finally(() => {
-        if (--pending === 0) {
-          _twNoticias = results;
-          twRender('');
-          if (upd) upd.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-          if (!results.length && el) el.innerHTML = '<p style="color:#888;font-size:.82rem">No se pudieron cargar las noticias</p>';
-        }
-      });
-  });
+  fetch(RADIO_SERVER + '/api/news')
+    .then(r => r.json()).then(d => {
+      _twNoticias = d;
+      twRender('');
+      if (upd) upd.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    }).catch(() => {
+      if (el) el.innerHTML = '<p style="color:#888;font-size:.82rem">No se pudieron cargar las noticias</p>';
+    });
 }
 
 function twFilter(btn, cat) {
