@@ -603,8 +603,8 @@ function twRender(cat) {
   el.innerHTML = items.map(n => `
     <a class="tw-ni cat-${n.categoria||'nacional'}" href="${n.link||'#'}" target="_blank" rel="noopener">
       <div class="tw-ni-meta">${n.fuente||''} · ${n.categoria||''}</div>
-      <div class="tw-ni-title">${n.title||''}</div>
-      ${n.description ? `<div class="tw-ni-desc">${n.description.slice(0,120)}…</div>` : ''}
+      <div class="tw-ni-title">${n.titulo||n.title||''}</div>
+      ${(n.resumen||n.description) ? `<div class="tw-ni-desc">${(n.resumen||n.description).slice(0,120)}…</div>` : ''}
     </a>`).join('');
 }
 
