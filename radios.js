@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-const RADIO_SERVER = 'https://website-imported-medicines-interactions.trycloudflare.com';
+const RADIO_SERVER = 'https://bear-cannon-kong-enquiry.trycloudflare.com';
 
 // â”€â”€ Estado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let socket       = null;
@@ -24,7 +24,7 @@ let donateAmount = 1000;
   const script = document.createElement('script');
   script.src = RADIO_SERVER + '/socket.io/socket.io.js';
   script.onload  = connectSocket;
-  script.onerror = () => setConn(false, 'Sin conexiÃ³n al servidor');
+  script.onerror = () => setConn(false, 'Sin conexion al servidor');
   document.head.appendChild(script);
 })();
 
@@ -521,7 +521,7 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// â”€â”€ Clima / DÃ³lar / Noticias â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Clima / Dolar / Noticias â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const _WMO = {0:'Despejado â˜€ï¸',1:'Casi despejado ðŸŒ¤ï¸',2:'Parcialmente nublado â›…',3:'Nublado â˜ï¸',45:'Niebla ðŸŒ«ï¸',48:'Niebla con escarcha ðŸŒ«ï¸',51:'Llovizna ligera ðŸŒ¦ï¸',53:'Llovizna moderada ðŸŒ¦ï¸',55:'Llovizna densa ðŸŒ§ï¸',61:'Lluvia ligera ðŸŒ§ï¸',63:'Lluvia moderada ðŸŒ§ï¸',65:'Lluvia intensa ðŸŒ§ï¸',71:'Nieve ligera ðŸŒ¨ï¸',73:'Nieve moderada ðŸŒ¨ï¸',75:'Nieve intensa â„ï¸',80:'Chaparrones ligeros ðŸŒ¦ï¸',81:'Chaparrones moderados ðŸŒ§ï¸',82:'Chaparrones intensos â›ˆï¸',85:'Nevadas ligeras ðŸŒ¨ï¸',86:'Nevadas intensas â„ï¸',95:'Tormenta â›ˆï¸',96:'Tormenta con granizo â›ˆï¸',99:'Tormenta con granizo fuerte â›ˆï¸'};
 
 function initClima() {
