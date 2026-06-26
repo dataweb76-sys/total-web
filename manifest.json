@@ -1,0 +1,20 @@
+{
+  "name": "Radio Pampa AR",
+  "short_name": "Radio Pampa",
+  "description": "Escuchá Radio Pampa AR en vivo desde tu celular o PC",
+  "start_url": "/radios.html",
+  "display": "standalone",
+  "background_color": "#0d0f14",
+  "theme_color": "#ef4444",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment"],
+  "lang": "es-AR"
+}
