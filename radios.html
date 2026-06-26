@@ -262,6 +262,33 @@
     .btn-wa:hover { opacity: .88; }
     .btn-wa svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
 
+    /* CLIMA */
+    .tw-temp { font-size:1.9rem; font-weight:800; line-height:1; color:var(--text); }
+    .tw-desc { font-size:.82rem; margin:4px 0; }
+    .tw-meta { font-size:.72rem; color:var(--text-muted); }
+    /* DÓLAR */
+    .tw-drow { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid var(--border); font-size:.8rem; }
+    .tw-drow:last-child { border-bottom:none; }
+    .tw-dventa { font-weight:700; color:#4ade80; font-family:monospace; }
+    .tw-dcompra { font-size:.7rem; color:var(--text-muted); }
+    /* FILTROS NOTICIAS */
+    .tw-nf { background:var(--surface2); border:1px solid var(--border); border-radius:20px; color:var(--text-muted); font-size:.72rem; padding:3px 10px; cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; }
+    .tw-nf.active { background:#ef4444; border-color:#ef4444; color:#fff; }
+    /* NOTICIAS ITEMS */
+    .tw-ni { display:block; text-decoration:none; color:inherit; border-left:3px solid var(--border); padding:8px 12px; border-radius:8px; background:var(--surface2); margin-bottom:8px; transition:opacity .15s; }
+    .tw-ni:hover { opacity:.82; }
+    .tw-ni.cat-local     { border-color:#4ade80; }
+    .tw-ni.cat-provincial{ border-color:#facc15; }
+    .tw-ni.cat-nacional  { border-color:#fb923c; }
+    .tw-ni.cat-deportes  { border-color:#60a5fa; }
+    .tw-ni-meta { font-size:.65rem; font-weight:700; text-transform:uppercase; margin-bottom:3px; color:var(--text-muted); }
+    .tw-ni.cat-local .tw-ni-meta      { color:#4ade80; }
+    .tw-ni.cat-provincial .tw-ni-meta { color:#facc15; }
+    .tw-ni.cat-nacional .tw-ni-meta   { color:#fb923c; }
+    .tw-ni.cat-deportes .tw-ni-meta   { color:#60a5fa; }
+    .tw-ni-title { font-size:.84rem; font-weight:600; margin-bottom:3px; }
+    .tw-ni-desc  { font-size:.75rem; color:var(--text-muted); }
+
     /* ── RESPONSIVE MOBILE (al final para pisar las reglas base) ── */
     @media (max-width: 860px) {
       .radio-grid { grid-template-columns: 1fr; }
@@ -417,12 +444,35 @@
             </form>
           </div>
 
-          <!-- PLAYLIST / PODCAST -->
-          <div class="r-card mobile-hide">
-            <div class="r-card-title">🎧 Podcast / Playlist</div>
-            <div id="podcastList">
-              <div class="ep-empty">No hay episodios cargados aún.</div>
+          <!-- CLIMA + DÓLAR -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="r-card" style="margin-bottom:0">
+              <div class="r-card-title">🌤️ Clima</div>
+              <div id="twClima"><span style="font-size:.8rem;color:var(--text-muted)">Obteniendo ubicación…</span></div>
             </div>
+            <div class="r-card" style="margin-bottom:0">
+              <div class="r-card-title" style="display:flex;justify-content:space-between">
+                💵 Dólar hoy
+                <span id="twDolarUpd" style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.65rem"></span>
+              </div>
+              <div id="twDolar"><span style="font-size:.8rem;color:var(--text-muted)">Cargando…</span></div>
+            </div>
+          </div>
+
+          <!-- NOTICIAS -->
+          <div class="r-card">
+            <div class="r-card-title" style="display:flex;justify-content:space-between;align-items:center">
+              <span>📰 Noticias</span>
+              <span id="twNewsUpd" style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.65rem"></span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+              <button class="tw-nf active" onclick="twFilter(this,'')">Todas</button>
+              <button class="tw-nf" onclick="twFilter(this,'local')">🟢 Local</button>
+              <button class="tw-nf" onclick="twFilter(this,'provincial')">🟡 Provincial</button>
+              <button class="tw-nf" onclick="twFilter(this,'nacional')">🟠 Nacional</button>
+              <button class="tw-nf" onclick="twFilter(this,'deportes')">⚽ Deportes</button>
+            </div>
+            <div id="twNewsList"><span style="font-size:.8rem;color:var(--text-muted)">Cargando noticias…</span></div>
           </div>
 
         </div>
