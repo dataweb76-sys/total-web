@@ -519,3 +519,97 @@ function resolveUrl(url) {
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+// ── Clima / Dólar / Noticias ──────────────
+const _WMO = {0:'Despejado ☀️',1:'Casi despejado 🌤️',2:'Parcialmente nublado ⛅',3:'Nublado ☁️',45:'Niebla 🌫️',48:'Niebla con escarcha 🌫️',51:'Llovizna ligera 🌦️',53:'Llovizna moderada 🌦️',55:'Llovizna densa 🌧️',61:'Lluvia ligera 🌧️',63:'Lluvia moderada 🌧️',65:'Lluvia intensa 🌧️',71:'Nieve ligera 🌨️',73:'Nieve moderada 🌨️',75:'Nieve intensa ❄️',80:'Chaparrones ligeros 🌦️',81:'Chaparrones moderados 🌧️',82:'Chaparrones intensos ⛈️',85:'Nevadas ligeras 🌨️',86:'Nevadas intensas ❄️',95:'Tormenta ⛈️',96:'Tormenta con granizo ⛈️',99:'Tormenta con granizo fuerte ⛈️'};
+
+function initClima() {
+  const el = document.getElementById('twClima');
+  if (!el) return;
+  const show = (lat, lon, city) => {
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=relativehumidity_2m&timezone=auto`)
+      .then(r => r.json()).then(d => {
+        const w = d.current_weather;
+        const desc = _WMO[w.weathercode] || 'Clima';
+        const hIdx = d.hourly.time.findIndex(t => t.startsWith(new Date().toISOString().slice(0,13)));
+        const hum = hIdx >= 0 ? d.hourly.relativehumidity_2m[hIdx] : '—';
+        el.innerHTML = `<div class="tw-temp">${Math.round(w.temperature)}°C</div>
+          <div class="tw-desc">${desc}</div>
+          <div class="tw-meta">${city} · Viento ${w.windspeed} km/h · Hum ${hum}%</div>`;
+      }).catch(() => { el.innerHTML = '<div class="tw-meta">No se pudo obtener el clima</div>'; });
+  };
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        const {latitude: lat, longitude: lon} = p.coords;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+          .then(r=>r.json()).then(d => show(lat, lon, d.address?.city || d.address?.town || d.address?.village || 'Tu ciudad'))
+          .catch(() => show(lat, lon, 'Tu ciudad'));
+      },
+      () => show(-36.6167, -64.2833, 'Santa Rosa')
+    );
+  } else { show(-36.6167, -64.2833, 'Santa Rosa'); }
+}
+
+function loadDolar() {
+  const el = document.getElementById('twDolar');
+  const upd = document.getElementById('twDolarUpd');
+  if (!el) return;
+  fetch(RADIO_SERVER + '/api/dolar')
+    .then(r => r.json()).then(d => {
+      const tipos = [
+        {n: d.blue?.nombre || 'Blue', v: d.blue?.venta, c: d.blue?.compra},
+        {n: d.oficial?.nombre || 'Oficial', v: d.oficial?.venta, c: d.oficial?.compra},
+        {n: d.tarjeta?.nombre || 'Tarjeta', v: d.tarjeta?.venta, c: d.tarjeta?.compra},
+      ].filter(t => t.v);
+      el.innerHTML = tipos.map(t => `
+        <div class="tw-drow">
+          <span>${t.n}</span>
+          <div style="text-align:right">
+            <div class="tw-dventa">$${t.v}</div>
+            <div class="tw-dcompra">Compra $${t.c}</div>
+          </div>
+        </div>`).join('');
+      if (upd) upd.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    }).catch(() => { el.innerHTML = '<div class="tw-meta">No disponible</div>'; });
+}
+
+let _twNoticias = [];
+function loadNoticias() {
+  const upd = document.getElementById('twNewsUpd');
+  fetch(RADIO_SERVER + '/api/news')
+    .then(r => r.json()).then(d => {
+      _twNoticias = d;
+      twRender('');
+      if (upd) upd.textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    }).catch(() => {
+      const el = document.getElementById('twNewsList');
+      if (el) el.innerHTML = '<p style="color:#888;font-size:.82rem">No se pudieron cargar las noticias</p>';
+    });
+}
+
+function twFilter(btn, cat) {
+  document.querySelectorAll('.tw-nf').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  twRender(cat);
+}
+
+function twRender(cat) {
+  const el = document.getElementById('twNewsList');
+  if (!el) return;
+  const items = cat ? _twNoticias.filter(n => n.categoria === cat) : _twNoticias;
+  if (!items.length) { el.innerHTML = '<p style="color:#888;font-size:.82rem">Sin noticias en esta categoría</p>'; return; }
+  el.innerHTML = items.map(n => `
+    <a class="tw-ni cat-${n.categoria||'nacional'}" href="${n.link||'#'}" target="_blank" rel="noopener">
+      <div class="tw-ni-meta">${n.fuente||''} · ${n.categoria||''}</div>
+      <div class="tw-ni-title">${n.title||''}</div>
+      ${n.description ? `<div class="tw-ni-desc">${n.description.slice(0,120)}…</div>` : ''}
+    </a>`).join('');
+}
+
+// ── Arrancar al cargar ──
+document.addEventListener('DOMContentLoaded', () => {
+  initClima();
+  loadDolar();
+  loadNoticias();
+});
