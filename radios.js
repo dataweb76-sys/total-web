@@ -4,7 +4,7 @@
    Cloudflare cuando lo tengas activo.
    ══════════════════════════════════════════ */
 
-const RADIO_SERVER = 'https://bear-cannon-kong-enquiry.trycloudflare.com';
+const RADIO_SERVER = 'https://crowd-aggregate-issues-tramadol.trycloudflare.com';
 
 // ── Estado ────────────────────────────────
 let socket       = null;
