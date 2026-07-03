@@ -879,23 +879,6 @@
     closeConsult();
   });
 
-  // ══ FADE-IN ══
-  var fadeObs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-        fadeObs.unobserve(e.target);
-      }
-    });
-  }, { threshold:0.07, rootMargin:'0px 0px -30px 0px' });
-
-  document.querySelectorAll('.linea-card,.plan-card,.inmo-plan,.rubro-card,.costo-card').forEach(function(el, i){
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(18px)';
-    el.style.transition = 'opacity 0.42s ease ' + (i % 8 * 0.065) + 's, transform 0.42s ease ' + (i % 8 * 0.065) + 's';
-    fadeObs.observe(el);
-  });
   </script>
 </body>
 </html>
