@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Catálogo completo de soluciones digitales de Local Web — landing pages, tiendas online, sistemas administrativos e inmobiliarias." />
+  <title>Catálogo de Soluciones | Local Web</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+  /* ══ CATÁLOGO ══ */
+  .cat-header { text-align:center; margin-bottom:48px; }
+  .cat-header h2 { font-size:clamp(1.7rem,3vw,2.4rem); font-weight:900; margin-bottom:10px; }
+  .cat-header p { color:var(--text-muted); max-width:540px; margin:0 auto; line-height:1.65; }
+
+  /* Hero */
+  .cat-hero { min-height:52vh; display:flex; align-items:center; padding:120px 0 70px; position:relative; overflow:hidden; text-align:center; }
+  .cat-hero-inner { position:relative; z-index:1; width:100%; }
+  .cat-hero h1 { font-size:clamp(2.2rem,5vw,3.8rem); font-weight:900; letter-spacing:-1.5px; margin-bottom:16px; }
+  .cat-hero p { font-size:1.1rem; color:var(--text-muted); max-width:620px; margin:0 auto 36px; line-height:1.7; }
+  .cat-hero .hero-stats { justify-content:center; }
+
+  /* 4 Líneas */
+  .lineas-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .linea-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 22px; position:relative; overflow:hidden; transition:transform .3s,box-shadow .3s; }
+  .linea-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--lc) 0%,transparent 55%); opacity:.07; pointer-events:none; }
+  .linea-card:hover { transform:translateY(-5px); box-shadow:0 20px 60px rgba(0,0,0,.35),0 0 0 1px var(--lc); }
+  .linea-icon { font-size:2rem; margin-bottom:12px; display:block; }
+  .linea-name { font-size:1.1rem; font-weight:800; color:var(--text); margin-bottom:4px; }
+  .linea-tagline { font-size:.8rem; color:var(--text-muted); margin-bottom:16px; }
+  .linea-feats { list-style:none; padding:0; margin:0 0 20px; display:flex; flex-direction:column; gap:7px; }
+  .linea-feats li { font-size:.82rem; color:var(--text-muted); display:flex; align-items:center; gap:7px; }
+  .linea-feats li::before { content:'✓'; color:var(--lc); font-weight:700; flex-shrink:0; }
+  .linea-consultar { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:var(--text); padding:9px 18px; border-radius:8px; font-size:.85rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; }
+  .linea-consultar:hover { background:var(--lc); border-color:var(--lc); color:#fff; }
+
+  /* Tabs */
+  .cat-tabs { display:flex; gap:6px; background:var(--surface); padding:6px; border-radius:12px; width:fit-content; margin:0 auto 40px; }
+  .cat-tab { padding:10px 24px; border-radius:8px; font-weight:700; font-size:.9rem; cursor:pointer; border:none; background:transparent; color:var(--text-muted); transition:all .25s; }
+  .cat-tab.active { background:var(--card); color:var(--text); box-shadow:0 2px 10px rgba(0,0,0,.25); }
+  .cat-pane { display:none; }
+  .cat-pane.active { display:block; }
+
+  /* Plan cards */
+  .planes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:22px; }
+  .plan-card { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; transition:transform .3s,box-shadow .3s; }
+  .plan-card:hover { transform:translateY(-5px); box-shadow:0 24px 60px rgba(0,0,0,.35),0 0 0 1px var(--pc,#6366f1); }
+
+  /* Site preview iframe */
+  .plan-mock { height:175px; position:relative; overflow:hidden; background:#07040f; flex-shrink:0; }
+  .site-preview-wrap { position:absolute; inset:0; overflow:hidden; background:#07040f; }
+  .site-preview-wrap::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 65%,rgba(0,0,0,.35) 100%); pointer-events:none; z-index:1; }
+  .site-preview-frame { position:absolute; top:0; left:0; width:1280px; height:900px; border:none; pointer-events:none; transform-origin:top left; }
+  .site-preview-label { position:absolute; bottom:7px; right:9px; z-index:2; background:rgba(0,0,0,.65); backdrop-filter:blur(6px); color:rgba(255,255,255,.7); font-size:8px; font-weight:600; padding:3px 8px; border-radius:20px; border:1px solid rgba(255,255,255,.1); }
+
+  .plan-body { padding:20px 22px 0; flex:1; display:flex; flex-direction:column; }
+  .plan-line-tag { display:inline-flex; align-items:center; gap:5px; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:10px; width:fit-content; }
+  .plan-name { font-size:1.2rem; font-weight:900; color:var(--text); margin-bottom:4px; }
+  .plan-ideal { font-size:.8rem; color:var(--text-muted); margin-bottom:16px; line-height:1.5; }
+  .plan-feats { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .plan-feats li { font-size:.82rem; color:var(--text-muted); display:flex; align-items:flex-start; gap:8px; }
+  .plan-feats li::before { content:'✓'; color:var(--pc,#6366f1); font-weight:700; font-size:.8rem; flex-shrink:0; margin-top:1px; }
+  .plan-example { display:flex; align-items:center; gap:8px; padding:10px 0; margin-top:12px; font-size:.75rem; color:var(--text-muted); border-top:1px solid var(--border); }
+  .plan-example-dot { width:7px; height:7px; border-radius:50%; background:var(--pc,#6366f1); flex-shrink:0; }
+  .plan-footer { padding:16px 22px 20px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:flex-end; }
+  .plan-btn { display:inline-flex; align-items:center; gap:5px; background:var(--pc,#6366f1); color:#fff; padding:10px 20px; border-radius:8px; font-size:.85rem; font-weight:700; cursor:pointer; border:none; font-family:inherit; transition:opacity .2s; }
+  .plan-btn:hover { opacity:.85; }
+
+  /* Inmobiliarias */
+  .inmo-hero-card { background:linear-gradient(135deg,#001a10,#003020); border-radius:20px; padding:36px 40px; margin-bottom:32px; display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center; position:relative; overflow:hidden; }
+  .inmo-hero-card h3 { font-size:1.8rem; font-weight:900; color:#fff; margin-bottom:8px; }
+  .inmo-hero-card p { color:rgba(255,255,255,.6); font-size:.95rem; line-height:1.65; margin-bottom:14px; }
+  .inmo-badge { background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:#34d399; padding:5px 14px; border-radius:30px; font-size:.8rem; font-weight:700; display:inline-block; margin-bottom:12px; }
+  .inmo-preview { border-radius:12px; overflow:hidden; position:relative; height:220px; border:1px solid rgba(255,255,255,.08); }
+  .inmo-preview .site-preview-wrap::after { display:none; }
+  .inmo-preview-label { text-align:center; margin-top:8px; font-size:.73rem; color:rgba(255,255,255,.35); }
+
+  .inmo-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .inmo-plan { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 16px; position:relative; transition:transform .3s,box-shadow .3s; display:flex; flex-direction:column; }
+  .inmo-plan:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.3),0 0 0 1px #10b981; }
+  .inmo-plan.featured { border-color:#10b981; box-shadow:0 0 0 1px #10b98130,0 12px 40px rgba(16,185,129,.12); }
+  .inmo-badge-pill { position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#10b981; color:#000; font-size:7px; font-weight:800; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .inmo-num { font-size:9px; font-weight:700; color:#10b981; letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; }
+  .inmo-pname { font-size:.88rem; font-weight:800; color:var(--text); margin-bottom:12px; line-height:1.3; }
+  .inmo-feats { list-style:none; padding:0; margin:0 0 14px; flex:1; display:flex; flex-direction:column; gap:5px; }
+  .inmo-feats li { font-size:.72rem; color:var(--text-muted); display:flex; align-items:flex-start; gap:5px; }
+  .inmo-feats li::before { content:'✓'; color:#10b981; font-weight:700; font-size:.7rem; flex-shrink:0; margin-top:1px; }
+  .inmo-feats li.prev { opacity:.45; }
+  .inmo-feats li.prev::before { content:'·'; }
+  .inmo-consultar { display:block; width:100%; padding:8px; background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.25); color:#10b981; border-radius:7px; font-size:.78rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; text-align:center; margin-top:auto; box-sizing:border-box; }
+  .inmo-consultar:hover { background:#10b981; color:#000; }
+
+  /* Otros rubros */
+  .rubros-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .rubro-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; transition:border-color .2s,transform .2s,box-shadow .2s; }
+  .rubro-card:hover { border-color:rgba(139,92,246,.5); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .rubro-name { font-size:.88rem; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+  .rubro-cta { font-size:.8rem; font-weight:700; color:#8b5cf6; white-space:nowrap; }
+
+  /* Costos */
+  .costos-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .costo-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:22px 20px; text-align:center; transition:transform .3s; cursor:pointer; }
+  .costo-card:hover { transform:translateY(-3px); border-color:rgba(99,102,241,.3); }
+  .costo-icon { font-size:1.8rem; margin-bottom:10px; }
+  .costo-name { font-size:.82rem; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .costo-period { font-size:.72rem; color:var(--text-muted); }
+  .costo-cta { font-size:.8rem; font-weight:700; color:#6366f1; margin-top:8px; }
+
+  /* Estrategia */
+  .estrategia-wrap { background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.08)); border:1px solid rgba(99,102,241,.2); border-radius:20px; padding:44px 48px; position:relative; overflow:hidden; }
+  .estrategia-wrap::after { content:'💡'; position:absolute; right:48px; top:50%; transform:translateY(-50%); font-size:90px; opacity:.1; pointer-events:none; }
+  .estrategia-badge { background:rgba(99,102,241,.15); border:1px solid rgba(99,102,241,.25); color:#a5b4fc; padding:5px 14px; border-radius:30px; font-size:.8rem; font-weight:700; display:inline-block; margin-bottom:16px; }
+  .estrategia-wrap h3 { font-size:1.5rem; font-weight:900; margin-bottom:12px; }
+  .estrategia-wrap p { color:var(--text-muted); line-height:1.75; max-width:620px; margin-bottom:24px; }
+  .lineas-chips { display:flex; gap:10px; flex-wrap:wrap; }
+  .lchip { padding:8px 18px; border-radius:30px; font-size:.85rem; font-weight:700; border:1px solid; transition:transform .2s; cursor:pointer; font-family:inherit; background:transparent; }
+  .lchip:hover { transform:translateY(-2px); }
+
+  /* CTA */
+  .cat-cta { background:linear-gradient(135deg,#0a0a1a,#12122a); border-radius:20px; padding:60px 48px; text-align:center; position:relative; overflow:hidden; }
+  .cat-cta::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(99,102,241,.15),transparent); }
+  .cat-cta h2 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:900; margin-bottom:12px; position:relative; }
+  .cat-cta p { color:var(--text-muted); font-size:1.05rem; max-width:520px; margin:0 auto 32px; position:relative; }
+  .cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; position:relative; }
+
+  /* ══ MODAL CONSULTA ══ */
+  .consult-modal { position:fixed; inset:0; z-index:99999; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .25s ease; }
+  .consult-modal.open { opacity:1; pointer-events:auto; }
+  .consult-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(5px); }
+  .consult-box { position:relative; z-index:1; background:#111827; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:36px 32px 32px; width:100%; max-width:460px; box-shadow:0 40px 100px rgba(0,0,0,.7); transform:translateY(16px) scale(.97); transition:transform .3s ease; }
+  .consult-modal.open .consult-box { transform:translateY(0) scale(1); }
+  .consult-close { position:absolute; top:14px; right:14px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.5); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .2s; padding:0; }
+  .consult-close:hover { background:rgba(255,255,255,.14); color:#fff; }
+  .consult-wa-icon { width:44px; height:44px; background:linear-gradient(135deg,#25d366,#128c7e); border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .consult-wa-icon svg { width:26px; height:26px; fill:#fff; }
+  .consult-title { font-size:1.2rem; font-weight:900; color:#fff; margin-bottom:4px; }
+  .consult-title em { font-style:normal; color:#22c55e; }
+  .consult-sub { font-size:.82rem; color:rgba(255,255,255,.45); margin-bottom:24px; }
+  .cform-group { margin-bottom:16px; }
+  .cform-label { display:block; font-size:.75rem; font-weight:600; color:rgba(255,255,255,.5); margin-bottom:6px; letter-spacing:.3px; text-transform:uppercase; }
+  .cform-input { width:100%; padding:11px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:9px; color:#fff; font-size:.95rem; font-family:inherit; transition:border-color .2s,box-shadow .2s; box-sizing:border-box; }
+  .cform-input:focus { outline:none; border-color:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.12); }
+  .cform-input::placeholder { color:rgba(255,255,255,.22); }
+  .phone-row { display:flex; gap:8px; }
+  .country-sel { padding:11px 8px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:9px; color:#fff; font-size:.82rem; font-family:inherit; cursor:pointer; width:130px; flex-shrink:0; }
+  .country-sel:focus { outline:none; border-color:#22c55e; }
+  .country-sel option { background:#111827; }
+  .area-inp { width:78px !important; flex-shrink:0; text-align:center; }
+  .num-inp { flex:1; min-width:0; }
+  .phone-hint { font-size:.7rem; color:rgba(255,255,255,.28); margin-top:5px; display:block; }
+  .cform-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.25); color:#fca5a5; border-radius:8px; padding:10px 14px; font-size:.82rem; margin-bottom:14px; display:none; }
+  .btn-wa-send { width:100%; padding:14px; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:opacity .2s,transform .15s; font-family:inherit; margin-top:6px; }
+  .btn-wa-send:hover { opacity:.92; transform:translateY(-1px); }
+
+  /* Responsive */
+  @media (max-width:1100px) { .inmo-grid { grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:960px) {
+    .lineas-grid { grid-template-columns:1fr 1fr; }
+    .planes-grid { grid-template-columns:1fr 1fr; }
+    .costos-grid { grid-template-columns:1fr 1fr; }
+    .rubros-grid { grid-template-columns:1fr 1fr; }
+    .inmo-grid { grid-template-columns:1fr 1fr; }
+    .inmo-hero-card { grid-template-columns:1fr; }
+    .estrategia-wrap { padding:28px; }
+    .estrategia-wrap::after { display:none; }
+    .cat-cta { padding:40px 24px; }
+  }
+  @media (max-width:600px) {
+    .lineas-grid { grid-template-columns:1fr; }
+    .planes-grid { grid-template-columns:1fr; }
+    .costos-grid { grid-template-columns:1fr 1fr; }
+    .rubros-grid { grid-template-columns:1fr 1fr; }
+    .inmo-grid { grid-template-columns:1fr; }
+    .cat-tabs { flex-direction:column; width:100%; }
+    .cat-tab { text-align:center; }
+    .consult-box { padding:28px 20px 24px; }
+    .phone-row { flex-wrap:wrap; }
+    .country-sel { width:100%; }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <span class="logo-total">Local</span><span class="logo-web">Web</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="/#servicios">Servicios</a>
+        <a href="/#nosotros">Nosotros</a>
+        <a href="/#proceso">Proceso</a>
+        <a href="/#clientes">Trabajos</a>
+        <a href="/catalogo" class="btn-nav" style="background:linear-gradient(135deg,#10b981,#059669);margin-right:6px">📋 Catálogo</a>
+        <a href="/radios" class="btn-nav" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin-right:6px">📻 Radio</a>
+        <a href="/#consulta" class="btn-nav">Consultanos</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="cat-hero">
+    <div class="hero-bg">
+      <div class="hero-orb orb1"></div>
+      <div class="hero-orb orb2"></div>
+      <div class="hero-grid"></div>
+    </div>
+    <div class="container cat-hero-inner">
+      <span class="hero-badge">📋 Catálogo 2025 · Soluciones digitales a medida</span>
+      <h1>Tu solución digital,<br><span class="gradient-text">en el plan ideal</span></h1>
+      <p>Cada negocio es único. Diseñamos y desarrollamos sistemas adaptados a tus procesos — sin pagar por lo que no necesitás y con capacidad de crecer con vos.</p>
+      <div class="hero-stats">
+        <div class="stat"><strong>5</strong><span>Soluciones generales</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>5</strong><span>Planes inmobiliarios</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>+15</strong><span>Rubros cubiertos</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>+120</strong><span>Proyectos entregados</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 LÍNEAS -->
+  <section class="section" style="background:var(--surface)">
+    <div class="container">
+      <div class="cat-header">
+        <span class="section-tag">Nuestra oferta</span>
+        <h2>4 líneas de <span class="gradient-text">negocio</span></h2>
+        <p>Organizamos nuestras soluciones en 4 categorías para que identifiques rápidamente el tipo de proyecto que necesitás.</p>
+      </div>
+      <div class="lineas-grid">
+
+        <div class="linea-card" style="--lc:#f97316">
+          <span class="linea-icon">🚀</span>
+          <div class="linea-name">Web Start</div>
+          <div class="linea-tagline">Comenzar y destacar online</div>
+          <ul class="linea-feats">
+            <li>Landing Page profesional</li>
+            <li>Diseño responsive (mobile)</li>
+            <li>WhatsApp + Google Maps</li>
+            <li>SEO básico incluido</li>
+            <li>Lista en 3 a 7 días</li>
+          </ul>
+          <button class="linea-consultar" onclick="openConsult('Web Start — Landing Page')">Consultar →</button>
+        </div>
+
+        <div class="linea-card" style="--lc:#3b82f6">
+          <span class="linea-icon">💼</span>
+          <div class="linea-name">Web Business</div>
+          <div class="linea-tagline">Mostrar todo tu negocio</div>
+          <ul class="linea-feats">
+            <li>Página institucional completa</li>
+            <li>Blog y noticias</li>
+            <li>Panel para modificar contenido</li>
+            <li>Catálogo de productos</li>
+            <li>Formularios avanzados</li>
+          </ul>
+          <button class="linea-consultar" onclick="openConsult('Web Business — Página Institucional')">Consultar →</button>
+        </div>
+
+        <div class="linea-card" style="--lc:#22c55e">
+          <span class="linea-icon">🛒</span>
+          <div class="linea-name">Web Commerce</div>
+          <div class="linea-tagline">Vender y gestionar online</div>
+          <ul class="linea-feats">
+            <li>Tienda Online completa</li>
+            <li>Carrito y pagos (MercadoPago)</li>
+            <li>Control de stock</li>
+            <li>Panel administrativo</li>
+            <li>Gestión de clientes y pedidos</li>
+          </ul>
+          <button class="linea-consultar" onclick="openConsult('Web Commerce — Tienda Online')">Consultar →</button>
+        </div>
+
+        <div class="linea-card" style="--lc:#8b5cf6">
+          <span class="linea-icon">🏢</span>
+          <div class="linea-name">Web Enterprise</div>
+          <div class="linea-tagline">Gestión integral del negocio</div>
+          <ul class="linea-feats">
+            <li>Sistema Administrativo a medida</li>
+            <li>CRM + Clientes + Proveedores</li>
+            <li>Reportes y estadísticas</li>
+            <li>Multiusuario + roles y permisos</li>
+            <li>Backup automático</li>
+          </ul>
+          <button class="linea-consultar" onclick="openConsult('Web Enterprise — Sistema Administrativo')">Consultar →</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANES DETALLADOS -->
+  <section class="section" id="planes">
+    <div class="container">
+      <div class="cat-header">
+        <span class="section-tag">Catálogo completo</span>
+        <h2>Elegí tu <span class="gradient-text">plan ideal</span></h2>
+        <p>Cada plan incluye diseño personalizado, desarrollo a medida y soporte post-lanzamiento.</p>
+      </div>
+
+      <div class="cat-tabs">
+        <button class="cat-tab active" data-tab="general">🌐 Soluciones Generales</button>
+        <button class="cat-tab" data-tab="inmobiliarias">🏠 Especialidad Inmobiliarias</button>
+      </div>
+
+      <!-- TAB GENERAL -->
+      <div class="cat-pane active" id="tab-general">
+        <div class="planes-grid">
+
+          <!-- Landing Page -->
+          <div class="plan-card" style="--pc:#f97316">
+            <div class="plan-mock">
+              <div class="site-preview-wrap">
+                <iframe src="https://dataweb76-sys.github.io/myn-refrigeracion/"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="MYN Refrigeración"></iframe>
+              </div>
+              <div class="site-preview-label">myn-refrigeracion</div>
+            </div>
+            <div class="plan-body">
+              <div class="plan-line-tag" style="background:rgba(249,115,22,.1);color:#f97316">🚀 Web Start</div>
+              <div class="plan-name">Landing Page</div>
+              <div class="plan-ideal">Ideal para comenzar a tener presencia en Internet</div>
+              <ul class="plan-feats">
+                <li>Diseño profesional adaptado a tu marca</li>
+                <li>100% adaptado a celulares</li>
+                <li>Sección de servicios y galería de fotos</li>
+                <li>Formulario de contacto</li>
+                <li>Botón WhatsApp flotante</li>
+                <li>Google Maps integrado</li>
+                <li>Íconos de redes sociales</li>
+                <li>SEO básico (Google)</li>
+              </ul>
+              <div class="plan-example">
+                <div class="plan-example-dot"></div>
+                Ejemplo: <a href="https://dataweb76-sys.github.io/myn-refrigeracion/" target="_blank" rel="noopener" style="color:var(--pc);text-decoration:none;font-weight:600">MYN Refrigeración →</a>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button class="plan-btn" onclick="openConsult('Landing Page')">Consultar →</button>
+            </div>
+          </div>
+
+          <!-- Página Institucional -->
+          <div class="plan-card" style="--pc:#3b82f6">
+            <div class="plan-mock">
+              <div class="site-preview-wrap">
+                <iframe src="https://nopal-consultora.vercel.app/"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="Nopal Consultora"></iframe>
+              </div>
+              <div class="site-preview-label">nopal-consultora.vercel.app</div>
+            </div>
+            <div class="plan-body">
+              <div class="plan-line-tag" style="background:rgba(59,130,246,.1);color:#3b82f6">💼 Web Business</div>
+              <div class="plan-name">Página Institucional</div>
+              <div class="plan-ideal">Ideal para empresas que quieren mostrar todo su negocio</div>
+              <ul class="plan-feats">
+                <li>Secciones: Inicio, Nosotros, Servicios, Clientes, Blog, Contacto</li>
+                <li>Formularios de contacto avanzados</li>
+                <li>Panel para modificar textos e imágenes</li>
+                <li>Integración con Google Analytics</li>
+                <li>Optimización SEO completa</li>
+              </ul>
+              <div class="plan-example">
+                <div class="plan-example-dot"></div>
+                Ejemplo: <a href="https://nopal-consultora.vercel.app/" target="_blank" rel="noopener" style="color:var(--pc);text-decoration:none;font-weight:600">Nopal Consultora →</a>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button class="plan-btn" onclick="openConsult('Página Institucional')">Consultar →</button>
+            </div>
+          </div>
+
+          <!-- Catálogo Online -->
+          <div class="plan-card" style="--pc:#22c55e">
+            <div class="plan-mock">
+              <div class="site-preview-wrap">
+                <iframe src="https://comercialweb-azure.vercel.app/"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="ComercialWeb"></iframe>
+              </div>
+              <div class="site-preview-label">comercialweb-azure.vercel.app</div>
+            </div>
+            <div class="plan-body">
+              <div class="plan-line-tag" style="background:rgba(34,197,94,.1);color:#22c55e">💼 Web Business</div>
+              <div class="plan-name">Catálogo Online</div>
+              <div class="plan-ideal">Ideal para comercios que quieren mostrar sus productos</div>
+              <ul class="plan-feats">
+                <li>Listado de productos con fotos</li>
+                <li>Categorías y filtros de búsqueda</li>
+                <li>Precio y descripción por producto</li>
+                <li>Consultas directas por WhatsApp</li>
+                <li>Panel de administración de productos</li>
+              </ul>
+              <div class="plan-example">
+                <div class="plan-example-dot"></div>
+                Ejemplo: <a href="https://comercialweb-azure.vercel.app/" target="_blank" rel="noopener" style="color:var(--pc);text-decoration:none;font-weight:600">Comercial Web →</a>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button class="plan-btn" onclick="openConsult('Catálogo Online')">Consultar →</button>
+            </div>
+          </div>
+
+          <!-- Tienda Online -->
+          <div class="plan-card" style="--pc:#8b5cf6">
+            <div class="plan-mock">
+              <div class="site-preview-wrap">
+                <iframe src="https://vanesalopez.vercel.app/"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="Vanesa Lopez"></iframe>
+              </div>
+              <div class="site-preview-label">vanesalopez.vercel.app</div>
+            </div>
+            <div class="plan-body">
+              <div class="plan-line-tag" style="background:rgba(139,92,246,.1);color:#8b5cf6">🛒 Web Commerce</div>
+              <div class="plan-name">Tienda Online</div>
+              <div class="plan-ideal">Para vender productos con pagos online integrados</div>
+              <ul class="plan-feats">
+                <li>Todo el catálogo online</li>
+                <li>Carrito de compras</li>
+                <li>Pagos con MercadoPago / Stripe</li>
+                <li>Gestión de stock en tiempo real</li>
+                <li>Panel de clientes y pedidos</li>
+                <li>Facturación integrada</li>
+              </ul>
+              <div class="plan-example">
+                <div class="plan-example-dot"></div>
+                Ejemplo: <a href="https://vanesalopez.vercel.app/" target="_blank" rel="noopener" style="color:var(--pc);text-decoration:none;font-weight:600">Vanesa Lopez →</a>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button class="plan-btn" onclick="openConsult('Tienda Online')">Consultar →</button>
+            </div>
+          </div>
+
+          <!-- Sistema Admin / Host Juegos -->
+          <div class="plan-card" style="--pc:#6366f1">
+            <div class="plan-mock">
+              <div class="site-preview-wrap">
+                <iframe src="https://infernohost-web.vercel.app/"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="InfernoHost"></iframe>
+              </div>
+              <div class="site-preview-label">infernohost-web.vercel.app</div>
+            </div>
+            <div class="plan-body">
+              <div class="plan-line-tag" style="background:rgba(99,102,241,.1);color:#6366f1">🏢 Web Enterprise</div>
+              <div class="plan-name">Sistema Administrativo</div>
+              <div class="plan-ideal">Para empresas que necesitan gestión integral</div>
+              <ul class="plan-feats">
+                <li>Usuarios, roles y permisos</li>
+                <li>Caja, clientes y proveedores</li>
+                <li>Compras, ventas y stock</li>
+                <li>Estadísticas y reportes</li>
+                <li>Backup automático</li>
+              </ul>
+              <div class="plan-example">
+                <div class="plan-example-dot"></div>
+                Ejemplo: <a href="https://infernohost-web.vercel.app/" target="_blank" rel="noopener" style="color:var(--pc);text-decoration:none;font-weight:600">InfernoHost →</a>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button class="plan-btn" onclick="openConsult('Sistema Administrativo')">Consultar →</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB INMOBILIARIAS -->
+      <div class="cat-pane" id="tab-inmobiliarias">
+
+        <div class="inmo-hero-card">
+          <div>
+            <div class="inmo-badge">🏠 Especialidad Local Web</div>
+            <h3>Sistemas para Inmobiliarias</h3>
+            <p>Desde una simple página de presentación hasta un ERP inmobiliario completo con gestión de alquileres, ventas, CRM, contratos, firma digital y app móvil.</p>
+            <button class="linea-consultar" style="--lc:#10b981" onclick="openConsult('Sistema Inmobiliario')">Consultar →</button>
+          </div>
+          <div>
+            <div class="inmo-preview">
+              <div class="site-preview-wrap">
+                <iframe src="https://www.pinogalant.com.ar"
+                        class="site-preview-frame" scrolling="no" loading="lazy"
+                        title="Pino Galant"></iframe>
+              </div>
+            </div>
+            <div class="inmo-preview-label">📍 Ejemplo real: pinogalant.com.ar</div>
+          </div>
+        </div>
+
+        <div class="inmo-grid">
+
+          <div class="inmo-plan">
+            <div class="inmo-num">Plan 1</div>
+            <div class="inmo-pname">Presencia Web</div>
+            <ul class="inmo-feats">
+              <li>Inicio, Empresa, Contacto</li>
+              <li>Listado básico de propiedades</li>
+              <li>Fotos y ubicación</li>
+              <li>WhatsApp integrado</li>
+              <li class="prev">Sin administración propia</li>
+            </ul>
+            <button class="inmo-consultar" onclick="openConsult('Inmobiliaria — Plan 1: Presencia Web')">Consultar →</button>
+          </div>
+
+          <div class="inmo-plan featured">
+            <div class="inmo-badge-pill">⭐ Más elegido</div>
+            <div class="inmo-num">Plan 2</div>
+            <div class="inmo-pname">Catálogo de Propiedades</div>
+            <ul class="inmo-feats">
+              <li>Todo el Plan 1</li>
+              <li>Alta, baja y modificación de propiedades</li>
+              <li>Fotos ilimitadas + videos</li>
+              <li>Propiedades destacadas</li>
+              <li>Filtros y buscador avanzado</li>
+              <li>Administración de propiedades</li>
+            </ul>
+            <button class="inmo-consultar" onclick="openConsult('Inmobiliaria — Plan 2: Catálogo de Propiedades')">Consultar →</button>
+          </div>
+
+          <div class="inmo-plan">
+            <div class="inmo-num">Plan 3</div>
+            <div class="inmo-pname">Gestión Comercial</div>
+            <ul class="inmo-feats">
+              <li>Todo el Plan 2</li>
+              <li>CRM de clientes y consultas</li>
+              <li>Agenda de visitas</li>
+              <li>Múltiples agentes</li>
+              <li>Tasaciones y seguimiento</li>
+              <li>Reservas y documentación</li>
+            </ul>
+            <button class="inmo-consultar" onclick="openConsult('Inmobiliaria — Plan 3: Gestión Comercial')">Consultar →</button>
+          </div>
+
+          <div class="inmo-plan">
+            <div class="inmo-num">Plan 4</div>
+            <div class="inmo-pname">Gestión de Alquileres</div>
+            <ul class="inmo-feats">
+              <li>Todo el Plan 3</li>
+              <li>Contratos y vencimientos</li>
+              <li>Cobros, deudas y caja</li>
+              <li>Inquilinos y propietarios</li>
+              <li>Liquidaciones y comisiones</li>
+              <li>Avisos automáticos</li>
+            </ul>
+            <button class="inmo-consultar" onclick="openConsult('Inmobiliaria — Plan 4: Gestión de Alquileres')">Consultar →</button>
+          </div>
+
+          <div class="inmo-plan" style="border-color:rgba(99,102,241,.3)">
+            <div class="inmo-num" style="color:#818cf8">Plan 5</div>
+            <div class="inmo-pname">ERP Inmobiliario</div>
+            <ul class="inmo-feats">
+              <li>Sistema completo integrado</li>
+              <li>Caja, bancos y facturación</li>
+              <li>Contratos + firma digital</li>
+              <li>CRM + agenda + recordatorios</li>
+              <li>Panel propietarios e inquilinos</li>
+              <li>App móvil incluida</li>
+              <li>Multiusuario + auditoría</li>
+            </ul>
+            <button class="inmo-consultar" style="border-color:rgba(99,102,241,.3);color:#818cf8" onclick="openConsult('Inmobiliaria — Plan 5: ERP Completo')">Consultar →</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OTROS RUBROS -->
+  <section class="section" style="background:var(--surface)">
+    <div class="container">
+      <div class="cat-header">
+        <span class="section-tag">Rubros que atendemos</span>
+        <h2>Otros <span class="gradient-text">rubros</span></h2>
+        <p>Desarrollo a medida según tu actividad. Incluye diseño, base de datos y panel de administración. Hacé clic para consultar.</p>
+      </div>
+      <div class="rubros-grid">
+        <div class="rubro-card" onclick="openConsult('Ferretería')"><div class="rubro-name">🔧 Ferretería</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Vivero')"><div class="rubro-name">🌿 Vivero</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Corralón')"><div class="rubro-name">🏗️ Corralón</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Supermercado')"><div class="rubro-name">🛒 Supermercado</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Veterinaria')"><div class="rubro-name">🐾 Veterinaria</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Gimnasio')"><div class="rubro-name">🏋️ Gimnasio</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Hotel')"><div class="rubro-name">🏨 Hotel</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Restaurante / Delivery')"><div class="rubro-name">🍕 Restaurante</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Clínica / Salud')"><div class="rubro-name">🏥 Clínica</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Estudio Contable')"><div class="rubro-name">📊 Estudio Contable</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Estudio de Abogados')"><div class="rubro-name">⚖️ Abogados</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Concesionaria')"><div class="rubro-name">🚗 Concesionaria</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Taller Mecánico')"><div class="rubro-name">🔩 Taller Mecánico</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Empresa de Servicios')"><div class="rubro-name">🏢 Empresa de Servicios</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" onclick="openConsult('Distribuidora')"><div class="rubro-name">📦 Distribuidora</div><div class="rubro-cta">Consultar →</div></div>
+        <div class="rubro-card" style="border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.05)" onclick="openConsult('Mi rubro (a definir)')">
+          <div class="rubro-name" style="color:#a5b4fc">✨ Tu rubro</div>
+          <div class="rubro-cta">Consultar →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COSTOS MENSUALES -->
+  <section class="section">
+    <div class="container">
+      <div class="cat-header">
+        <span class="section-tag">Abono mensual (opcional)</span>
+        <h2>Costos de <span class="gradient-text">mantenimiento</span></h2>
+        <p>Todos los desarrollos pueden incluir un abono mensual para garantizar el funcionamiento, la seguridad y el soporte del sistema.</p>
+      </div>
+      <div class="costos-grid">
+        <div class="costo-card" onclick="openConsult('Hosting en Vercel')">
+          <div class="costo-icon">☁️</div>
+          <div class="costo-name">Hosting en Vercel</div>
+          <div class="costo-period">mensual</div>
+          <div class="costo-cta">Consultar →</div>
+        </div>
+        <div class="costo-card" onclick="openConsult('Base de datos Supabase')">
+          <div class="costo-icon">🗄️</div>
+          <div class="costo-name">Base de datos Supabase</div>
+          <div class="costo-period">mensual</div>
+          <div class="costo-cta">Consultar →</div>
+        </div>
+        <div class="costo-card" onclick="openConsult('Dominio .com.ar')">
+          <div class="costo-icon">🌐</div>
+          <div class="costo-name">Dominio .com.ar</div>
+          <div class="costo-period">anual</div>
+          <div class="costo-cta">Consultar →</div>
+        </div>
+        <div class="costo-card" onclick="openConsult('Soporte y mantenimiento mensual')">
+          <div class="costo-icon">🛠️</div>
+          <div class="costo-name">Soporte y mantenimiento</div>
+          <div class="costo-period">mensual · opcional</div>
+          <div class="costo-cta">Consultar →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTRATEGIA COMERCIAL -->
+  <section class="section" style="background:var(--surface)">
+    <div class="container">
+      <div class="estrategia-wrap">
+        <div class="estrategia-badge">💡 Una estrategia que ayuda a vender más</div>
+        <h3>Presentá tus soluciones en 4 líneas de negocio</h3>
+        <p>En lugar de dar un único precio, mostrá tus servicios organizados en 4 niveles. Esto comunica más valor, facilita la comparación y permite justificar proyectos de mayor envergadura cuando el cliente necesita CRM, administración de alquileres, control de stock o gestión integral.</p>
+        <div class="lineas-chips">
+          <button class="lchip" style="color:#f97316;border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.08)" onclick="openConsult('Web Start — Landing Page')">🚀 Web Start</button>
+          <button class="lchip" style="color:#3b82f6;border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.08)" onclick="openConsult('Web Business — Página Institucional')">💼 Web Business</button>
+          <button class="lchip" style="color:#22c55e;border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)" onclick="openConsult('Web Commerce — Tienda Online')">🛒 Web Commerce</button>
+          <button class="lchip" style="color:#8b5cf6;border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.08)" onclick="openConsult('Web Enterprise — Sistema Admin')">🏢 Web Enterprise</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section">
+    <div class="container">
+      <div class="cat-cta">
+        <h2>¿Cuál es el plan<br><span class="gradient-text">ideal para tu negocio?</span></h2>
+        <p>Contanos qué necesitás y te respondemos con un presupuesto personalizado sin costo ni compromiso.</p>
+        <div class="cta-btns">
+          <button class="btn-primary" onclick="openConsult('Presupuesto personalizado')">Pedir presupuesto gratis</button>
+          <a href="https://wa.me/5492954368999?text=Hola%20Local%20Web%21%20Vi%20el%20cat%C3%A1logo%20y%20quiero%20consultar." target="_blank" rel="noopener" class="btn-ghost">📱 WhatsApp directo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo"><span class="logo-total">Local</span><span class="logo-web">Web</span></a>
+        <p>Soluciones digitales integrales para PyMES, emprendedores e inmobiliarias.</p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/datawebdigital/" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Soluciones</h5>
+          <a href="#planes" onclick="switchTab('general');return false">Landing Page</a>
+          <a href="#planes" onclick="switchTab('general');return false">Tienda Online</a>
+          <a href="#planes" onclick="switchTab('inmobiliarias');return false">Inmobiliarias</a>
+          <a href="#planes" onclick="switchTab('general');return false">Sistema Admin</a>
+        </div>
+        <div class="footer-col">
+          <h5>Local Web</h5>
+          <a href="/#servicios">Servicios</a>
+          <a href="/#nosotros">Nosotros</a>
+          <a href="/#clientes">Trabajos</a>
+          <a href="/#consulta">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contacto</h5>
+          <a href="https://wa.me/5492954368999" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="https://www.instagram.com/datawebdigital/" target="_blank" rel="noopener">@datawebdigital</a>
+          <a href="/#consulta">Formulario</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2025 Local Web. Todos los derechos reservados.</span>
+        <span>Hecho con ❤️ en Argentina</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flotante -->
+  <a href="https://wa.me/5492954368999?text=Hola%20Local%20Web%2C%20vi%20el%20cat%C3%A1logo%20y%20quiero%20consultar%20sobre%20sus%20planes"
+     target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- ══ MODAL CONSULTA POR WHATSAPP ══ -->
+  <div class="consult-modal" id="consultModal" role="dialog" aria-modal="true" aria-labelledby="consultTitle">
+    <div class="consult-backdrop" id="consultBackdrop"></div>
+    <div class="consult-box">
+      <button class="consult-close" id="consultClose" aria-label="Cerrar">✕</button>
+      <div class="consult-wa-icon">
+        <svg viewBox="0 0 24 24" fill="white" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </div>
+      <h3 class="consult-title" id="consultTitle">Consultar sobre <em id="consultPlanName">este plan</em></h3>
+      <p class="consult-sub">Completá tus datos y te respondemos al instante por WhatsApp</p>
+      <form id="consultForm" novalidate>
+        <div class="cform-group">
+          <label class="cform-label" for="fNombre">Tu nombre *</label>
+          <input class="cform-input" type="text" id="fNombre" placeholder="Ej: Juan García" autocomplete="name" required />
+        </div>
+        <div class="cform-group">
+          <label class="cform-label">Teléfono *</label>
+          <div class="phone-row">
+            <select class="country-sel" id="fCountry" title="Código de país"></select>
+            <input class="cform-input area-inp" type="text" id="fArea" placeholder="Área" maxlength="6" inputmode="numeric" title="Código de área sin el 0 inicial" />
+            <input class="cform-input num-inp" type="text" id="fNum" placeholder="Número" maxlength="12" inputmode="numeric" required />
+          </div>
+          <span class="phone-hint">Código de área sin el 0 · Ej: área 299, número 4123456</span>
+        </div>
+        <div class="cform-error" id="fError"></div>
+        <button type="submit" class="btn-wa-send">
+          <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Enviar consulta por WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+  // ══ TABS ══
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.cat-pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      setTimeout(scaleFrames, 60);
+    });
+  });
+  function switchTab(name) {
+    const tab = document.querySelector('[data-tab="' + name + '"]');
+    if (tab) tab.click();
+    document.getElementById('planes').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  // ══ IFRAMES: escalar al ancho del contenedor ══
+  function scaleFrames() {
+    document.querySelectorAll('.site-preview-wrap').forEach(function(wrap) {
+      var frame = wrap.querySelector('.site-preview-frame');
+      if (!frame) return;
+      var s = wrap.offsetWidth / 1280;
+      frame.style.transform = 'scale(' + s + ')';
+      frame.style.height = Math.ceil(wrap.offsetHeight / s) + 'px';
+    });
+  }
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(scaleFrames);
+    document.querySelectorAll('.site-preview-wrap').forEach(function(w){ ro.observe(w); });
+  }
+  window.addEventListener('load', scaleFrames);
+  window.addEventListener('resize', function(){ clearTimeout(window._sfT); window._sfT = setTimeout(scaleFrames, 80); });
+  scaleFrames();
+
+  // ══ COUNTRIES ══
+  var DIAL_CODES = [
+    { iso:'AR', dial:'54',  flag:'🇦🇷', name:'Argentina' },
+    { iso:'UY', dial:'598', flag:'🇺🇾', name:'Uruguay' },
+    { iso:'CL', dial:'56',  flag:'🇨🇱', name:'Chile' },
+    { iso:'BR', dial:'55',  flag:'🇧🇷', name:'Brasil' },
+    { iso:'PY', dial:'595', flag:'🇵🇾', name:'Paraguay' },
+    { iso:'BO', dial:'591', flag:'🇧🇴', name:'Bolivia' },
+    { iso:'PE', dial:'51',  flag:'🇵🇪', name:'Perú' },
+    { iso:'CO', dial:'57',  flag:'🇨🇴', name:'Colombia' },
+    { iso:'VE', dial:'58',  flag:'🇻🇪', name:'Venezuela' },
+    { iso:'EC', dial:'593', flag:'🇪🇨', name:'Ecuador' },
+    { iso:'MX', dial:'52',  flag:'🇲🇽', name:'México' },
+    { iso:'US', dial:'1',   flag:'🇺🇸', name:'USA' },
+    { iso:'CA', dial:'1',   flag:'🇨🇦', name:'Canadá' },
+    { iso:'ES', dial:'34',  flag:'🇪🇸', name:'España' },
+    { iso:'PT', dial:'351', flag:'🇵🇹', name:'Portugal' },
+    { iso:'IT', dial:'39',  flag:'🇮🇹', name:'Italia' },
+    { iso:'DE', dial:'49',  flag:'🇩🇪', name:'Alemania' },
+    { iso:'FR', dial:'33',  flag:'🇫🇷', name:'Francia' },
+    { iso:'GB', dial:'44',  flag:'🇬🇧', name:'Reino Unido' }
+  ];
+  var countrySelect = document.getElementById('fCountry');
+  var _detectedIso = 'AR';
+
+  function populateCountries(iso) {
+    _detectedIso = iso || 'AR';
+    var sorted = DIAL_CODES.slice().sort(function(a,b){
+      return a.iso === _detectedIso ? -1 : b.iso === _detectedIso ? 1 : 0;
+    });
+    countrySelect.innerHTML = sorted.map(function(c){
+      return '<option value="' + c.dial + '"' + (c.iso === _detectedIso ? ' selected' : '') + '>' + c.flag + ' +' + c.dial + ' ' + c.name + '</option>';
+    }).join('');
+  }
+
+  populateCountries('AR');
+  try {
+    fetch('https://ipapi.co/json/')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d && d.country_code) populateCountries(d.country_code); })
+      .catch(function(){});
+  } catch(e){}
+
+  // ══ MODAL ══
+  function openConsult(planName) {
+    document.getElementById('consultPlanName').textContent = planName;
+    document.getElementById('fError').style.display = 'none';
+    document.getElementById('consultForm').reset();
+    populateCountries(_detectedIso);
+    document.getElementById('consultModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ document.getElementById('fNombre').focus(); }, 220);
+  }
+  function closeConsult() {
+    document.getElementById('consultModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('consultClose').addEventListener('click', closeConsult);
+  document.getElementById('consultBackdrop').addEventListener('click', closeConsult);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeConsult(); });
+
+  document.getElementById('consultForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var nombre = document.getElementById('fNombre').value.trim();
+    var dial   = document.getElementById('fCountry').value;
+    var area   = document.getElementById('fArea').value.trim().replace(/^0+/, '');
+    var num    = document.getElementById('fNum').value.trim().replace(/\s/g, '');
+    var plan   = document.getElementById('consultPlanName').textContent;
+    var errEl  = document.getElementById('fError');
+
+    if (!nombre) {
+      errEl.textContent = 'Por favor ingresá tu nombre.';
+      errEl.style.display = 'block';
+      document.getElementById('fNombre').focus();
+      return;
+    }
+    if (!num) {
+      errEl.textContent = 'Por favor ingresá tu número de teléfono.';
+      errEl.style.display = 'block';
+      document.getElementById('fNum').focus();
+      return;
+    }
+
+    errEl.style.display = 'none';
+    var phone = '+' + dial + (area ? area : '') + num;
+    var msg = '¡Hola Local Web! 👋\n\nQuiero consultar sobre: *' + plan + '*\n\n📝 *Nombre:* ' + nombre + '\n📱 *Teléfono:* ' + phone + '\n\n¿Me pueden dar más información y un presupuesto?';
+    window.open('https://wa.me/5492954368999?text=' + encodeURIComponent(msg), '_blank');
+    closeConsult();
+  });
+
+  // ══ FADE-IN ══
+  var fadeObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        fadeObs.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.07, rootMargin:'0px 0px -30px 0px' });
+
+  document.querySelectorAll('.linea-card,.plan-card,.inmo-plan,.rubro-card,.costo-card').forEach(function(el, i){
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity 0.42s ease ' + (i % 8 * 0.065) + 's, transform 0.42s ease ' + (i % 8 * 0.065) + 's';
+    fadeObs.observe(el);
+  });
+  </script>
+</body>
+</html>

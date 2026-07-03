@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Local Web — Diseño web, hosting de juegos, publicidad en redes, community manager, apps y sistemas a medida para tu negocio." />
   <title>Local Web | Soluciones Digitales Integrales</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -21,6 +22,9 @@
         <a href="#servicios">Servicios</a>
         <a href="#nosotros">Nosotros</a>
         <a href="#proceso">Proceso</a>
+        <a href="#clientes">Trabajos</a>
+        <a href="/catalogo" class="btn-nav" style="background:linear-gradient(135deg,#10b981,#059669);margin-right:6px">📋 Catálogo</a>
+        <a href="/radios" class="btn-nav" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin-right:6px">📻 Radio</a>
         <a href="#consulta" class="btn-nav">Consultanos</a>
       </nav>
       <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -29,31 +33,57 @@
     </div>
   </header>
 
-  <!-- ══ HERO ══ -->
-  <section class="hero">
+  <!-- ══ HERO DINÁMICO ══ -->
+  <section class="hero hero-dyn">
     <div class="hero-bg">
       <div class="hero-orb orb1"></div>
       <div class="hero-orb orb2"></div>
       <div class="hero-grid"></div>
     </div>
-    <div class="container hero-content">
-      <span class="hero-badge">🚀 Soluciones digitales para tu negocio</span>
-      <h1>Tu presencia digital,<br /><span class="gradient-text">hecha a tu medida</span></h1>
-      <p class="hero-sub">
-        Creamos páginas web, apps, servidores de juegos, gestionamos tus redes y
-        te ayudamos a crecer en el mundo digital — todo en un solo lugar.
-      </p>
-      <div class="hero-cta">
-        <a href="presupuesto.html" class="btn-primary">Pedir presupuesto gratis</a>
-        <a href="#servicios" class="btn-ghost">Ver servicios</a>
+    <div class="container hero-dyn-wrap">
+
+      <!-- TEXTO -->
+      <div class="hero-dyn-text">
+        <span class="hero-badge">🚀 Soluciones digitales para tu negocio</span>
+        <h1>Creamos tu <span class="gradient-text" id="hdmSiteType">tienda online</span><br>a tu medida</h1>
+        <p class="hero-sub">Diseñamos y desarrollamos páginas web para cada tipo de negocio — desde tiendas y gimnasios hasta inmobiliarias, sistemas administrativos y restaurantes.</p>
+        <div class="hero-cta">
+          <a href="presupuesto.html" class="btn-primary">Pedir presupuesto gratis</a>
+          <a href="#servicios" class="btn-ghost">Ver servicios</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>+50</strong><span>Clientes activos</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><strong>+120</strong><span>Proyectos entregados</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><strong>5 años</strong><span>de experiencia</span></div>
+        </div>
       </div>
-      <div class="hero-stats">
-        <div class="stat"><strong>+50</strong><span>Clientes activos</span></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><strong>+120</strong><span>Proyectos entregados</span></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><strong>5 años</strong><span>de experiencia</span></div>
+
+      <!-- MOCKUP ANIMADO -->
+      <div class="hero-dyn-right">
+        <div class="hdm-type-pill" id="hdmTypePill">
+          <span id="hdmPillIcon">🛒</span>
+          <span id="hdmPillText">Tienda Online</span>
+        </div>
+        <div class="hdm-browser" id="hdmBrowser">
+          <div class="hdm-chrome">
+            <div class="hdm-win-dots"><span></span><span></span><span></span></div>
+            <div class="hdm-url-bar">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span id="hdmUrlText">tu-tienda.com</span>
+            </div>
+            <div class="hdm-chrome-actions">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"/></svg>
+            </div>
+          </div>
+          <div class="hdm-progress-bar"><div class="hdm-progress-fill" id="hdmProgressFill"></div></div>
+          <div class="hdm-screen" id="hdmScreen"></div>
+        </div>
+        <div class="hdm-dots-nav" id="hdmDotsNav"></div>
       </div>
+
     </div>
   </section>
 
@@ -292,6 +322,239 @@
           <p>Publicamos, configuramos el dominio y te capacitamos para usar tu nueva herramienta digital.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ══ CLIENTES / PORTFOLIO ══ -->
+  <section class="section clientes" id="clientes">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Trabajos realizados</span>
+        <h2>Ya confían en <span class="gradient-text">Local Web</span></h2>
+        <p>Estos son algunos de los proyectos que desarrollamos para nuestros clientes. Cada uno, hecho a medida.</p>
+      </div>
+      <div class="portfolio-grid">
+
+        <!-- NOPAL CONSULTORA -->
+        <a href="https://nopal-consultora.vercel.app/" target="_blank" rel="noopener" class="portfolio-card" data-brand="nopal">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content nopal-mock">
+              <div class="mock-logo">🌵 Nopal Consultora</div>
+              <div class="mock-pills">
+                <span>Consultoría</span><span>Estrategia</span><span>Gestión</span>
+              </div>
+              <div class="mock-tagline">Soluciones para hacer crecer tu empresa</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#22c55e">Consultora</span>
+            <h4>Nopal Consultora</h4>
+            <p>Sitio profesional para consultora de negocios. Presentación de servicios, equipo y formulario de contacto.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- MYN REFRIGERACIÓN -->
+        <a href="https://dataweb76-sys.github.io/myn-refrigeracion/" target="_blank" rel="noopener" class="portfolio-card" data-brand="myn">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content myn-mock">
+              <div class="mock-logo">❄️ MYN Refrigeración</div>
+              <div class="mock-pills">
+                <span>Aire acondicionado</span><span>Frío</span><span>Servicio</span>
+              </div>
+              <div class="mock-tagline">Instalación y mantenimiento de A/C</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#38bdf8">Servicios del Hogar</span>
+            <h4>MYN Refrigeración</h4>
+            <p>Sitio para empresa de refrigeración y aire acondicionado. Catálogo de servicios, zona de cobertura y contacto directo.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- PINO GALANT -->
+        <a href="https://www.pinogalant.com.ar/" target="_blank" rel="noopener" class="portfolio-card" data-brand="pinogalant">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content pinogalant-mock">
+              <div class="mock-logo">🏠 Pino Galant</div>
+              <div class="mock-pills">
+                <span>Propiedades</span><span>Alquileres</span><span>Ventas</span>
+              </div>
+              <div class="mock-tagline">Inmobiliaria en Santa Rosa, La Pampa</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#10b981">Inmobiliaria</span>
+            <h4>Pino Galant</h4>
+            <p>Sitio inmobiliario completo con catálogo de propiedades, búsqueda por tipo y zona, galería de fotos y formulario de consulta.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- RIFA LOCAL -->
+        <a href="https://rifaslocal.vercel.app/" target="_blank" rel="noopener" class="portfolio-card" data-brand="rifas">
+          <div class="portfolio-mockup portfolio-mockup--screenshot">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <img src="rifas.png" alt="RifaLocal — Rifas online" class="portfolio-screenshot" />
+            <div class="portfolio-screenshot-badge">🎰 Nuevo</div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#f59e0b">Plataforma Online</span>
+            <h4>Rifa Local</h4>
+            <p>Rifas online con sorteo automático, venta de números por MercadoPago y panel de administración en tiempo real.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- TRABAJOS CERCA -->
+        <a href="https://www.trabajoscerca.com.ar/" target="_blank" rel="noopener" class="portfolio-card" data-brand="trabajoscerca">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content trabajoscerca-mock">
+              <div class="mock-logo">💼 TrabajosCerca</div>
+              <div class="mock-pills">
+                <span>Empleos</span><span>Oficios</span><span>Búsqueda</span>
+              </div>
+              <div class="mock-tagline">Conectamos trabajadores con empleadores</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#22d3ee">Portal de Empleos</span>
+            <h4>Trabajos Cerca</h4>
+            <p>Plataforma de búsqueda laboral que conecta trabajadores y empleadores locales. Multi-rubro, registro con teléfono y perfiles verificados.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- DATAWEB GAMES -->
+        <a href="https://datawebgames-jpg.github.io/dataweb/index.html#inicio" target="_blank" rel="noopener" class="portfolio-card" data-brand="dataweb">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content dataweb-mock">
+              <div class="mock-logo">🎮 DataWeb Games</div>
+              <div class="mock-pills">
+                <span>Gaming</span><span>Servidores</span><span>Comunidad</span>
+              </div>
+              <div class="mock-tagline">Tu mundo gamer, siempre online</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#a78bfa">Gaming</span>
+            <h4>DataWeb Games</h4>
+            <p>Sitio de comunidad gamer con información de servidores, juegos y servicios para la comunidad gaming de la región.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- COMERCIAL WEB -->
+        <a href="https://comercialweb-azure.vercel.app/" target="_blank" rel="noopener" class="portfolio-card" data-brand="comercialweb">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content comercialweb-mock">
+              <div class="mock-logo">🏪 ComercialWeb</div>
+              <div class="mock-pills">
+                <span>Comercios</span><span>Publicidad</span><span>Digital</span>
+              </div>
+              <div class="mock-tagline">Tu negocio local, visible en internet</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#2dd4bf">Directorio Comercial</span>
+            <h4>Comercial Web</h4>
+            <p>Directorio y plataforma de publicidad para comercios locales. Presencia digital, campañas y gestión de clientes en un solo lugar.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- INFERNO HOST -->
+        <a href="https://infernohost-web.vercel.app/" target="_blank" rel="noopener" class="portfolio-card" data-brand="infernohost">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content infernohost-mock">
+              <div class="mock-logo">🔥 InfernoHost</div>
+              <div class="mock-pills">
+                <span>Minecraft</span><span>FiveM</span><span>Rust</span>
+              </div>
+              <div class="mock-tagline">Servidores de juegos de alta performance</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#f97316">Game Hosting</span>
+            <h4>InfernoHost</h4>
+            <p>Hosting de servidores de juegos estilo Nitrado. Panel de control, baja latencia y soporte para Minecraft, FiveM, Rust y más.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- VANESA LOPEZ -->
+        <a href="https://vanesalopez.vercel.app/" target="_blank" rel="noopener" class="portfolio-card" data-brand="vanesalopez">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content vanesalopez-mock">
+              <div class="mock-logo">👗 Vanesa Lopez</div>
+              <div class="mock-pills">
+                <span>Moda</span><span>Tienda Online</span><span>Ropa</span>
+              </div>
+              <div class="mock-tagline">Moda femenina con estilo propio</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#f472b6">Tienda Online</span>
+            <h4>Vanesa Lopez</h4>
+            <p>Tienda online de moda femenina con catálogo de productos, carrito de compras y gestión de pedidos integrada.</p>
+            <span class="portfolio-link">Ver sitio →</span>
+          </div>
+        </a>
+
+        <!-- GUÍA TIENDA ONLINE -->
+        <a href="https://tiendalopez.vercel.app/guia-comercial-tienda-online.html" target="_blank" rel="noopener" class="portfolio-card" data-brand="guiatienda">
+          <div class="portfolio-mockup">
+            <div class="mockup-bar"><span></span><span></span><span></span></div>
+            <div class="mockup-content tiendalopez-mock">
+              <div class="mock-logo">🛒 Guía Tienda Online</div>
+              <div class="mock-pills">
+                <span>Ecommerce</span><span>Guía</span><span>Ventas</span>
+              </div>
+              <div class="mock-tagline">Todo lo que necesitás para vender online</div>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag" style="--tag-color:#fb923c">Recurso Gratuito</span>
+            <h4>Guía Tienda Online</h4>
+            <p>Guía completa para comercios que quieren vender por internet: pasos, herramientas, costos y estrategias para arrancar tu tienda digital.</p>
+            <span class="portfolio-link">Ver guía →</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA PRESUPUESTO ══ -->
+  <section class="cta-presupuesto">
+    <div class="cta-presup-bg">
+      <div class="cta-orb cta-orb1"></div>
+      <div class="cta-orb cta-orb2"></div>
+    </div>
+    <div class="container cta-presup-inner">
+      <div class="cta-presup-badge">💸 Sin costo · Sin compromiso</div>
+      <h2 class="cta-presup-title">¿Cuánto cuesta<br>tu próximo proyecto?</h2>
+      <p class="cta-presup-sub">Completá el formulario en 2 minutos y te enviamos un presupuesto personalizado por WhatsApp el mismo día.</p>
+      <div class="cta-presup-features">
+        <div class="cta-feat"><span class="cta-feat-icon">⚡</span>Respuesta el mismo día</div>
+        <div class="cta-feat"><span class="cta-feat-icon">🎯</span>Presupuesto a medida</div>
+        <div class="cta-feat"><span class="cta-feat-icon">🔒</span>Sin compromiso</div>
+        <div class="cta-feat"><span class="cta-feat-icon">📱</span>Te llegá por WhatsApp</div>
+      </div>
+      <a href="/presupuesto" class="cta-presup-btn">
+        <span>Pedir presupuesto gratis</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <p class="cta-presup-nota">+50 negocios ya confían en Local Web</p>
     </div>
   </section>
 
