@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Radio Pampa AR — Escuchá en vivo, chateá con otros oyentes y participá de los podcasts." />
+  <title>Radio Pampa AR | Local Web</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ef4444" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Radio Pampa" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Radio page styles ───────────────────────────── */
+    .radio-hero {
+      padding: 90px 0 32px;
+      background: radial-gradient(ellipse at 60% 0%, rgba(239,68,68,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(59,130,246,0.1) 0%, transparent 50%);
+    }
+    .radio-hero-inner {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+    }
+    .radio-live-dot {
+      width: 11px; height: 11px; border-radius: 50%; background: #ef4444;
+      animation: blink 1.2s ease-in-out infinite; display: none;
+    }
+    .radio-live-dot.active { display: block; }
+    @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.85)} }
+    .radio-hero h1 { font-size: clamp(1.45rem, 5vw, 2.4rem); font-weight: 800; line-height: 1.1; }
+    .radio-hero p  { color: var(--text-muted); margin-top: 6px; font-size: .9rem; }
+
+    /* INSTALL BUTTON */
+    #btnInstall {
+      display: none;
+      align-items: center; gap: 6px;
+      margin-top: 14px;
+      padding: 9px 18px; border-radius: 10px;
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #f87171; font-size: .82rem; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: background .15s;
+    }
+    #btnInstall:hover { background: rgba(239,68,68,.25); }
+    #btnInstall.shown { display: inline-flex; }
+
+    /* GRID — desktop: 2 cols, mobile: 1 col */
+    .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+      padding-bottom: 60px;
+      align-items: start;
+    }
+
+    /* CARDS */
+    .r-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 480px) { .r-card { padding: 14px 14px; } }
+    .r-card-title {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text-muted); margin-bottom: 14px;
+    }
+
+    /* PLAYER */
+    .player-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .player-icon {
+      width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+    .player-meta h2 { font-size: 1.05rem; font-weight: 700; }
+    .player-conn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .73rem; color: var(--text-muted); margin-top: 3px;
+    }
+    .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #4b5563; }
+    .conn-dot.on { background: #22c55e; }
+    .live-badge {
+      display: none; margin-left: auto;
+      background: rgba(239,68,68,.15); color: #f87171;
+      border: 1px solid rgba(239,68,68,.3);
+      font-size: .68rem; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    .live-badge.visible { display: inline-flex; align-items: center; gap: 5px; }
+
+    .track-box {
+      background: var(--surface2); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 14px; min-height: 48px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .track-eq { display: none; align-items: flex-end; gap: 3px; height: 18px; flex-shrink: 0; }
+    .track-eq.active { display: flex; }
+    .eq-bar {
+      width: 4px; border-radius: 2px; background: #3b82f6;
+      animation: eq 0.8s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(2) { animation-delay: .15s; }
+    .eq-bar:nth-child(3) { animation-delay: .3s; }
+    @keyframes eq { from{height:4px} to{height:16px} }
+    .track-name { font-size: .88rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
+
+    .player-controls { display: flex; align-items: center; gap: 10px; }
+    .btn-play-main {
+      flex: 1; padding: 13px; border-radius: 12px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #fff; font-size: .95rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      min-height: 46px;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn-play-main:hover:not(:disabled) { opacity: .88; transform: scale(1.01); }
+    .btn-play-main:disabled { opacity: .35; cursor: not-allowed; }
+    .btn-play-main.paused { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .vol-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .vol-wrap span { font-size: 1.1rem; cursor: pointer; }
+    .vol-wrap input { width: 72px; accent-color: #ef4444; }
+    @media (max-width: 380px) { .vol-wrap input { width: 54px; } }
+
+    /* BANNER */
+    .banner-strip {
+      display: none;
+      background: linear-gradient(90deg, rgba(239,68,68,.15), rgba(249,115,22,.1));
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      font-size: .86rem; font-weight: 600;
+      color: #fca5a5; overflow: hidden;
+      animation: bannerFade .4s ease;
+    }
+    .banner-strip.visible { display: block; }
+    #bannerText {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
+    @keyframes bannerFade { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes marquee { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
+
+    /* PUBLICIDAD — en panel principal, arriba del chat */
+    .ad-slot {
+      background: var(--surface2); border-radius: 12px;
+      min-height: 90px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+      padding: 16px; text-align: center; color: var(--text-muted);
+      font-size: .82rem; border: 1px dashed var(--border);
+    }
+    .ad-slot img { width: 100%; border-radius: 10px; object-fit: cover; max-height: 160px; }
+    .ad-slot .ad-name { font-weight: 600; color: var(--text); }
+
+    /* CHAT */
+    .chat-messages {
+      height: 220px; overflow-y: auto; background: var(--surface2);
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .chat-empty { font-size: .78rem; color: var(--text-muted); text-align: center; margin: auto; }
+    .chat-msg { font-size: .82rem; line-height: 1.45; }
+    .chat-msg-name { font-weight: 700; color: #60a5fa; margin-right: 5px; }
+    .chat-msg-text { color: var(--text); }
+    .chat-form { display: flex; gap: 7px; }
+    .chat-name {
+      width: 80px; flex-shrink: 0; padding: 9px 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: .78rem; font-family: 'Inter', sans-serif;
+    }
+    @media (max-width: 380px) { .chat-name { display: none; } }
+    .chat-input {
+      flex: 1; padding: 9px 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: .82rem; font-family: 'Inter', sans-serif;
+    }
+    .chat-input:focus, .chat-name:focus { outline: none; border-color: #3b82f6; }
+    .chat-send {
+      padding: 9px 14px; border-radius: 10px; border: none; cursor: pointer;
+      background: var(--grad); color: #fff; font-size: 1rem; min-width: 42px;
+    }
+    .chat-send:disabled { opacity: .35; }
+
+    /* PODCAST */
+    .ep-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
+    }
+    .ep-item:last-child { border-bottom: none; }
+    .ep-num {
+      width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+      background: var(--surface2); color: var(--text-muted);
+      font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ep-name { font-size: .82rem; font-weight: 500; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ep-empty { font-size: .8rem; color: var(--text-muted); text-align: center; padding: 10px 0; }
+
+    /* CÁMARA EN VIVO */
+    .cam-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; display: none;
+    }
+    .cam-card.visible { display: block; }
+    .cam-header {
+      padding: 9px 14px; display: flex; align-items: center; gap: 7px;
+      background: rgba(239,68,68,.08); border-bottom: 1px solid var(--border);
+    }
+    .cam-live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #ef4444;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    .cam-header span { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #f87171; }
+    #vidEl { width: 100%; display: block; background: #000; min-height: 160px; }
+
+    /* DONACIONES */
+    .donate-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 12px; }
+    .donate-opt {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 4px; text-align: center; cursor: pointer;
+      transition: border-color .15s, background .15s; font-size: .78rem;
+    }
+    .donate-opt:hover, .donate-opt.selected {
+      border-color: #8b5cf6; background: rgba(139,92,246,.12);
+    }
+    .donate-opt strong { display: block; font-size: .95rem; color: var(--text); }
+    .donate-opt span { color: var(--text-muted); font-size: .68rem; }
+    .donate-custom { display: flex; gap: 8px; margin-bottom: 12px; }
+    .donate-custom input {
+      flex: 1; padding: 9px 12px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: .85rem;
+    }
+    .donate-custom input:focus { outline: none; border-color: #8b5cf6; }
+    .btn-donate {
+      width: 100%; padding: 13px; border-radius: 12px; border: none; cursor: pointer;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: #fff; font-size: .93rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      min-height: 46px; transition: opacity .15s;
+    }
+    .btn-donate:hover { opacity: .88; }
+    .donate-note { font-size: .7rem; color: var(--text-muted); text-align: center; margin-top: 8px; }
+
+    /* WHATSAPP */
+    .btn-wa {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 13px; border-radius: 12px;
+      background: #22c55e; color: #fff; font-weight: 700; font-size: .93rem;
+      text-decoration: none; min-height: 46px; transition: opacity .15s;
+    }
+    .btn-wa:hover { opacity: .88; }
+    .btn-wa svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+    /* NOTICIAS */
+    .noticia-item {
+      display: block; padding: 9px 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: var(--text); font-size: .82rem; line-height: 1.4;
+      transition: color .15s;
+    }
+    .noticia-item:last-child { border-bottom: none; }
+    .noticia-item:hover { color: var(--blue); }
+    .noticia-titulo { font-weight: 600; margin-bottom: 3px; }
+    .noticia-resumen { color: var(--text-muted); font-size: .76rem; line-height: 1.4; }
+    .noticia-fuente { font-size: .68rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* CLIMA */
+    .clima-main { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .clima-icon { font-size: 2.2rem; line-height: 1; }
+    .clima-temp { font-size: 1.7rem; font-weight: 800; color: var(--text); }
+    .clima-desc { font-size: .75rem; color: var(--text-muted); margin-top: 2px; }
+    .clima-extra { display: flex; gap: 8px; flex-wrap: wrap; }
+    .clima-pill { background: var(--surface2); border-radius: 8px; padding: 4px 9px; font-size: .72rem; color: var(--text-muted); }
+    .clima-pill strong { color: var(--text); }
+
+    /* DÓLAR */
+    .dolar-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .dolar-row:last-child { border-bottom: none; }
+    .dolar-nombre { font-size: .8rem; font-weight: 600; color: var(--text); }
+    .dolar-vals { display: flex; gap: 10px; font-size: .78rem; }
+    .dolar-compra { color: var(--text-muted); }
+    .dolar-venta { color: #22c55e; font-weight: 700; }
+    .dolar-updated { font-size: .68rem; color: var(--text-muted); margin-top: 8px; text-align: right; }
+
+    /* ── RESPONSIVE MOBILE (al final para pisar las reglas base) ── */
+    @media (max-width: 860px) {
+      .radio-grid { grid-template-columns: 1fr; }
+      .radio-col-right { order: 10; }
+    }
+    @media (max-width: 640px) {
+      .radio-hero { display: none; }
+      .section { padding-top: 0 !important; }
+      .container { padding: 0 10px; }
+      .radio-grid { gap: 0; padding-bottom: 16px; padding-top: 60px; }
+      .r-card { padding: 10px 12px; margin-bottom: 6px; border-radius: 10px; }
+      .r-card-title { font-size: .62rem; margin-bottom: 8px; letter-spacing: .05em; }
+      .player-top { gap: 8px; margin-bottom: 8px; }
+      .player-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 8px; }
+      .player-meta h2 { font-size: .82rem; }
+      .player-conn { font-size: .66rem; margin-top: 2px; }
+      .conn-dot { width: 6px; height: 6px; }
+      .live-badge { font-size: .58rem; padding: 2px 5px; }
+      .track-box { padding: 6px 10px; margin-bottom: 8px; min-height: 30px; border-radius: 8px; }
+      .track-name { font-size: .76rem; }
+      .player-controls { gap: 6px; }
+      .btn-play-main { padding: 8px; font-size: .8rem; min-height: 36px; border-radius: 10px; }
+      .vol-wrap input { width: 52px; }
+      .vol-wrap span { font-size: .95rem; }
+      .ad-slot { min-height: 52px; padding: 8px; gap: 4px; border-radius: 8px; font-size: .75rem; }
+      #vidEl { min-height: 120px; }
+      .cam-card { margin-bottom: 6px; border-radius: 10px; }
+      .chat-messages { height: 110px; padding: 8px; }
+      .chat-msg { font-size: .78rem; }
+      .chat-name { width: 64px; padding: 7px 6px; font-size: .74rem; }
+      .chat-input { padding: 7px 8px; font-size: .78rem; }
+      .chat-send { padding: 7px 10px; font-size: .9rem; min-width: 36px; }
+      .mobile-hide { display: none !important; }
+      .donate-options { gap: 4px; }
+      .donate-opt { padding: 7px 3px; font-size: .75rem; }
+      .donate-opt strong { font-size: .88rem; }
+      .donate-custom input { padding: 7px 10px; font-size: .8rem; }
+      .btn-donate { padding: 9px; font-size: .82rem; min-height: 38px; }
+      .donate-note { font-size: .68rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-total">Local</span><span class="logo-web">Web</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#servicios">Servicios</a>
+        <a href="index.html#nosotros">Nosotros</a>
+        <a href="index.html#consulta">Contacto</a>
+        <a href="radios.html" class="btn-nav-radio">📻 Radio</a>
+        <a href="index.html#consulta" class="btn-nav">Consultanos</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══ HERO ══ -->
+  <section class="radio-hero">
+    <div class="container">
+      <div class="radio-hero-inner">
+        <div class="radio-live-dot" id="heroDot"></div>
+        <span class="section-tag">Radio Online</span>
+      </div>
+      <h1>Radio Pampa AR <span class="gradient-text">en vivo</span></h1>
+      <p>Escuchá nuestra programación, chateá con otros oyentes y apoyá la radio.</p>
+      <button id="btnInstall" onclick="installPWA()">📲 Instalar app en tu celular</button>
+    </div>
+  </section>
+
+  <!-- ══ CONTENIDO ══ -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+
+      <div class="radio-grid">
+
+        <!-- ── COLUMNA PRINCIPAL ── -->
+        <div>
+
+          <!-- PLAYER -->
+          <div class="r-card">
+            <div class="r-card-title">🎙️ Reproductor</div>
+            <div class="player-top">
+              <div class="player-icon">📻</div>
+              <div class="player-meta">
+                <h2>Radio Pampa AR</h2>
+                <div class="player-conn">
+                  <div class="conn-dot" id="connDot"></div>
+                  <span id="connText">Conectando...</span>
+                </div>
+              </div>
+              <span class="live-badge" id="liveBadge">● EN VIVO</span>
+            </div>
+
+            <div class="track-box">
+              <div class="track-eq" id="trackEq">
+                <div class="eq-bar" style="height:9px"></div>
+                <div class="eq-bar" style="height:15px"></div>
+                <div class="eq-bar" style="height:7px"></div>
+              </div>
+              <span class="track-name" id="trackName">Conectando a la radio...</span>
+            </div>
+
+            <div class="player-controls">
+              <button class="btn-play-main" id="btnPlay" onclick="togglePlay()" disabled>▶ Escuchar</button>
+              <div class="vol-wrap">
+                <span onclick="toggleMute()" id="volIcon">🔊</span>
+                <input type="range" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVol(this.value)">
+              </div>
+            </div>
+          </div>
+
+          <!-- BANNER STRIP -->
+          <div class="banner-strip" id="bannerStrip">
+            <span id="bannerText"></span>
+          </div>
+
+          <!-- PUBLICIDAD -->
+          <div class="r-card">
+            <div class="r-card-title">📢 Publicidad</div>
+            <div class="ad-slot" id="adSlot">
+              <span style="font-size:1.8rem">📡</span>
+              <span>Espacio publicitario</span>
+              <span style="font-size:.7rem">Contactanos para publicitar en la radio</span>
+            </div>
+          </div>
+
+          <!-- CÁMARA EN VIVO (visible en mobile entre publicidad y chat) -->
+          <div class="cam-card cam-card-inline" id="camCard">
+            <div class="cam-header">
+              <div class="cam-live-dot"></div>
+              <span>En vivo</span>
+            </div>
+            <video id="vidEl" autoplay playsinline muted></video>
+          </div>
+
+          <!-- CHAT -->
+          <div class="r-card">
+            <div class="r-card-title">💬 Chat en vivo</div>
+            <div class="chat-messages" id="chatMessages">
+              <span class="chat-empty">Sé el primero en escribir...</span>
+            </div>
+            <form class="chat-form" onsubmit="sendChat(event)">
+              <input class="chat-name" id="chatName" placeholder="Tu nombre" maxlength="20" value="Oyente">
+              <input class="chat-input" id="chatInput" placeholder="Escribí un mensaje..." maxlength="200" disabled>
+              <button class="chat-send" id="chatSend" type="submit" disabled>➤</button>
+            </form>
+          </div>
+
+          <!-- NOTICIAS -->
+          <div class="r-card">
+            <div class="r-card-title">📰 Noticias</div>
+            <div id="noticiasContent"><div class="ep-empty">Cargando...</div></div>
+          </div>
+
+        </div>
+
+        <!-- ── COLUMNA DERECHA ── -->
+        <div class="radio-col-right">
+
+          <!-- CLIMA -->
+          <div class="r-card">
+            <div class="r-card-title">🌤️ Clima</div>
+            <div id="climaContent"><div class="ep-empty">Cargando...</div></div>
+          </div>
+
+          <!-- DÓLAR -->
+          <div class="r-card">
+            <div class="r-card-title">💵 Dólar hoy</div>
+            <div id="dolarContent"><div class="ep-empty">Cargando...</div></div>
+          </div>
+
+          <!-- DONACIONES -->
+          <div class="r-card">
+            <div class="r-card-title">💜 Apoyá la radio</div>
+            <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">
+              Tu donación nos ayuda a mantener la radio al aire y mejorar la programación.
+            </p>
+            <div class="donate-options">
+              <div class="donate-opt" onclick="selectAmount(500,event)"><strong>$500</strong><span>Colaboración</span></div>
+              <div class="donate-opt selected" onclick="selectAmount(1000,event)"><strong>$1.000</strong><span>Apoyo</span></div>
+              <div class="donate-opt" onclick="selectAmount(2000,event)"><strong>$2.000</strong><span>Mecenas</span></div>
+            </div>
+            <div class="donate-custom">
+              <input type="number" id="donateAmount" placeholder="O ingresá un monto..." min="100" value="1000">
+            </div>
+            <button class="btn-donate" onclick="openDonation()">💜 Donar ahora</button>
+            <p class="donate-note">Pago seguro vía Mercado Pago</p>
+          </div>
+
+          <!-- WHATSAPP -->
+          <div class="r-card">
+            <div class="r-card-title">📱 Contacto directo</div>
+            <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
+              ¿Querés pedir un tema, hacer un saludo o publicitar en la radio?
+            </p>
+            <a href="https://wa.me/5492954320639?text=Hola%20Radio%20Pampa%20AR%2C%20quiero%20contactarme!"
+               target="_blank" rel="noopener" class="btn-wa">
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-total">Local</span><span class="logo-web">Web</span>
+        </a>
+        <p>Soluciones digitales integrales para PyMES, emprendedores e inmobiliarias.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Radio</h5>
+          <a href="radios.html">▶ Escuchar en vivo</a>
+          <a href="radios.html#chat">Chat</a>
+          <a href="radios.html#donaciones">Donaciones</a>
+        </div>
+        <div class="footer-col">
+          <h5>Local Web</h5>
+          <a href="index.html#servicios">Servicios</a>
+          <a href="index.html#clientes">Trabajos</a>
+          <a href="index.html#consulta">Contacto</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2025 Local Web. Todos los derechos reservados.</span>
+        <span>Hecho con ❤️ en Argentina</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flotante -->
+  <a href="https://wa.me/5492954320639?text=Hola%20Radio%20Pampa%20AR!" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="radios.js"></script>
+  <script src="script.js"></script>
+
+  <!-- Service Worker + PWA install prompt -->
+  <script>
+    // Registrar Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+    // Prompt de instalación
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      document.getElementById('btnInstall').classList.add('shown');
+    });
+    window.addEventListener('appinstalled', () => {
+      document.getElementById('btnInstall').classList.remove('shown');
+      deferredInstallPrompt = null;
+    });
+    function installPWA() {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+    }
+
+    // Fix: selectAmount necesita el event explícito
+    function selectAmount(val, e) {
+      donateAmount = val;
+      document.getElementById('donateAmount').value = val;
+      document.querySelectorAll('.donate-opt').forEach(el => el.classList.remove('selected'));
+      (e?.currentTarget || event?.currentTarget)?.classList.add('selected');
+    }
+  </script>
+</body>
+</html>
