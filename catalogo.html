@@ -76,6 +76,25 @@
   .inmo-preview { border-radius:12px; overflow:hidden; position:relative; height:220px; border:1px solid rgba(255,255,255,.08); }
   .inmo-preview .site-preview-wrap::after { display:none; }
   .inmo-preview-label { text-align:center; margin-top:8px; font-size:.73rem; color:rgba(255,255,255,.35); }
+  /* Pino Galant mockup */
+  .pino-mock { height:100%; background:#f8f9fa; display:flex; flex-direction:column; font-family:sans-serif; overflow:hidden; }
+  .pino-nav { background:#0d3d26; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .pino-logo { color:#fff; font-weight:800; font-size:.8rem; letter-spacing:.5px; }
+  .pino-nav-links { display:flex; gap:10px; }
+  .pino-nav-links span { color:rgba(255,255,255,.7); font-size:.6rem; cursor:default; }
+  .pino-hero-bar { background:linear-gradient(135deg,#0d3d26,#1a6b44); padding:10px 12px; flex-shrink:0; }
+  .pino-hero-text { color:#fff; font-size:.65rem; font-weight:700; display:block; margin-bottom:5px; }
+  .pino-search { background:#fff; border-radius:6px; padding:4px 8px; display:flex; align-items:center; gap:5px; font-size:.6rem; color:#666; }
+  .pino-search-icon { font-size:.65rem; }
+  .pino-cards { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:8px; flex:1; overflow:hidden; }
+  .pino-card { background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.1); display:flex; flex-direction:column; }
+  .pino-card-img { height:52px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+  .pino-card-body { padding:5px 6px; flex:1; }
+  .pino-tag { display:inline-block; background:#0d3d26; color:#fff; font-size:.5rem; padding:1px 5px; border-radius:3px; font-weight:700; margin-bottom:2px; }
+  .pino-tag-alq { background:#6366f1; }
+  .pino-price { font-size:.62rem; font-weight:800; color:#111; line-height:1.2; }
+  .pino-addr { font-size:.52rem; color:#666; margin:1px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pino-specs { display:flex; gap:4px; font-size:.5rem; color:#888; margin-top:2px; }
 
   .inmo-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
   .inmo-plan { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 16px; position:relative; transition:transform .3s,box-shadow .3s; display:flex; flex-direction:column; }
@@ -489,13 +508,38 @@
           </div>
           <div>
             <div class="inmo-preview">
-              <div class="site-preview-wrap">
-                <iframe src="https://www.pinogalant.com.ar"
-                        class="site-preview-frame" scrolling="no" loading="lazy"
-                        title="Pino Galant"></iframe>
+              <div class="pino-mock">
+                <div class="pino-nav">
+                  <span class="pino-logo">🏡 Pino Galant</span>
+                  <span class="pino-nav-links"><span>Propiedades</span><span>Tasaciones</span><span>Nosotros</span></span>
+                </div>
+                <div class="pino-hero-bar">
+                  <span class="pino-hero-text">Encontrá tu próxima propiedad</span>
+                  <div class="pino-search"><span class="pino-search-icon">🔍</span><span>Buscar en Neuquén...</span></div>
+                </div>
+                <div class="pino-cards">
+                  <div class="pino-card">
+                    <div class="pino-card-img" style="background:linear-gradient(135deg,#1a3a2a,#2d5c40)"><span>🏠</span></div>
+                    <div class="pino-card-body">
+                      <div class="pino-tag">Venta</div>
+                      <div class="pino-price">USD 85.000</div>
+                      <div class="pino-addr">Av. Argentina 234, Neuquén</div>
+                      <div class="pino-specs"><span>🛏 3</span><span>🚿 2</span><span>📐 72m²</span></div>
+                    </div>
+                  </div>
+                  <div class="pino-card">
+                    <div class="pino-card-img" style="background:linear-gradient(135deg,#2a1a3a,#402d5c)"><span>🏢</span></div>
+                    <div class="pino-card-body">
+                      <div class="pino-tag pino-tag-alq">Alquiler</div>
+                      <div class="pino-price">$ 180.000/mes</div>
+                      <div class="pino-addr">San Martín 890, Neuquén</div>
+                      <div class="pino-specs"><span>🛏 2</span><span>🚿 1</span><span>📐 55m²</span></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="inmo-preview-label">📍 Ejemplo real: pinogalant.com.ar</div>
+            <div class="inmo-preview-label">📍 Ejemplo real: <a href="https://www.pinogalant.com.ar" target="_blank" rel="noopener" style="color:rgba(255,255,255,.5);text-decoration:none">pinogalant.com.ar →</a></div>
           </div>
         </div>
 
