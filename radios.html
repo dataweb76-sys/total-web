@@ -292,45 +292,66 @@
     .dolar-venta { color: #22c55e; font-weight: 700; }
     .dolar-updated { font-size: .68rem; color: var(--text-muted); margin-top: 8px; text-align: right; }
 
-    /* ── RESPONSIVE MOBILE (al final para pisar las reglas base) ── */
+    /* ── RESPONSIVE MOBILE ── */
     @media (max-width: 860px) {
-      .radio-grid { grid-template-columns: 1fr; }
-      .radio-col-right { order: 10; }
+      .radio-grid { grid-template-columns: 1fr; gap: 0; }
+      /* display:contents hace que los hijos sean directos del grid y se pueda controlar el orden */
+      .radio-col-left, .radio-col-right { display: contents; }
+      .rg-player  { order: 1; }
+      .rg-clima   { order: 2; }
+      .rg-dolar   { order: 3; }
+      .rg-banner  { order: 4; }
+      .rg-ad      { order: 5; }
+      .rg-cam     { order: 6; }
+      .rg-chat    { order: 7; }
+      .rg-news    { order: 8; }
+      .rg-donate  { order: 9; }
+      .rg-wa      { order: 10; }
     }
     @media (max-width: 640px) {
       .radio-hero { display: none; }
       .section { padding-top: 0 !important; }
       .container { padding: 0 10px; }
-      .radio-grid { gap: 0; padding-bottom: 16px; padding-top: 60px; }
-      .r-card { padding: 10px 12px; margin-bottom: 6px; border-radius: 10px; }
+      .radio-grid { padding-bottom: 16px; padding-top: 60px; }
+      .r-card { padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; }
       .r-card-title { font-size: .62rem; margin-bottom: 8px; letter-spacing: .05em; }
       .player-top { gap: 8px; margin-bottom: 8px; }
       .player-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 8px; }
-      .player-meta h2 { font-size: .82rem; }
+      .player-meta h2 { font-size: .9rem; }
       .player-conn { font-size: .66rem; margin-top: 2px; }
       .conn-dot { width: 6px; height: 6px; }
       .live-badge { font-size: .58rem; padding: 2px 5px; }
-      .track-box { padding: 6px 10px; margin-bottom: 8px; min-height: 30px; border-radius: 8px; }
-      .track-name { font-size: .76rem; }
+      .track-box { padding: 8px 10px; margin-bottom: 8px; min-height: 36px; border-radius: 8px; }
+      .track-name { font-size: .82rem; }
       .player-controls { gap: 6px; }
-      .btn-play-main { padding: 8px; font-size: .8rem; min-height: 36px; border-radius: 10px; }
-      .vol-wrap input { width: 52px; }
+      .btn-play-main { padding: 10px; font-size: .88rem; min-height: 42px; border-radius: 10px; }
+      .vol-wrap input { width: 60px; }
       .vol-wrap span { font-size: .95rem; }
+      /* Clima compacto */
+      .clima-temp { font-size: 1.4rem; }
+      .clima-icon { font-size: 1.8rem; }
+      /* Dolar compacto */
+      .dolar-nombre { font-size: .78rem; }
+      .dolar-vals { font-size: .74rem; gap: 6px; }
       .ad-slot { min-height: 52px; padding: 8px; gap: 4px; border-radius: 8px; font-size: .75rem; }
       #vidEl { min-height: 120px; }
-      .cam-card { margin-bottom: 6px; border-radius: 10px; }
-      .chat-messages { height: 110px; padding: 8px; }
-      .chat-msg { font-size: .78rem; }
+      .cam-card { margin-bottom: 8px; border-radius: 10px; }
+      .chat-messages { height: 130px; padding: 8px; }
+      .chat-msg { font-size: .8rem; }
       .chat-name { width: 64px; padding: 7px 6px; font-size: .74rem; }
-      .chat-input { padding: 7px 8px; font-size: .78rem; }
-      .chat-send { padding: 7px 10px; font-size: .9rem; min-width: 36px; }
+      .chat-input { padding: 7px 8px; font-size: .8rem; }
+      .chat-send { padding: 7px 10px; font-size: .9rem; min-width: 38px; }
       .mobile-hide { display: none !important; }
       .donate-options { gap: 4px; }
       .donate-opt { padding: 7px 3px; font-size: .75rem; }
       .donate-opt strong { font-size: .88rem; }
       .donate-custom input { padding: 7px 10px; font-size: .8rem; }
-      .btn-donate { padding: 9px; font-size: .82rem; min-height: 38px; }
+      .btn-donate { padding: 11px; font-size: .85rem; min-height: 42px; }
       .donate-note { font-size: .68rem; }
+      .btn-wa { padding: 11px; font-size: .88rem; min-height: 42px; }
+      .noticia-titulo { font-size: .84rem; }
+      /* Footer compacto */
+      .footer-links { display: none; }
     }
   </style>
 </head>
@@ -375,10 +396,10 @@
       <div class="radio-grid">
 
         <!-- ── COLUMNA PRINCIPAL ── -->
-        <div>
+        <div class="radio-col-left">
 
           <!-- PLAYER -->
-          <div class="r-card">
+          <div class="r-card rg-player">
             <div class="r-card-title">🎙️ Reproductor</div>
             <div class="player-top">
               <div class="player-icon">📻</div>
@@ -411,12 +432,12 @@
           </div>
 
           <!-- BANNER STRIP -->
-          <div class="banner-strip" id="bannerStrip">
+          <div class="banner-strip rg-banner" id="bannerStrip">
             <span id="bannerText"></span>
           </div>
 
           <!-- PUBLICIDAD -->
-          <div class="r-card">
+          <div class="r-card rg-ad">
             <div class="r-card-title">📢 Publicidad</div>
             <div class="ad-slot" id="adSlot">
               <span style="font-size:1.8rem">📡</span>
@@ -425,8 +446,8 @@
             </div>
           </div>
 
-          <!-- CÁMARA EN VIVO (visible en mobile entre publicidad y chat) -->
-          <div class="cam-card cam-card-inline" id="camCard">
+          <!-- CÁMARA EN VIVO -->
+          <div class="cam-card cam-card-inline rg-cam" id="camCard">
             <div class="cam-header">
               <div class="cam-live-dot"></div>
               <span>En vivo</span>
@@ -435,7 +456,7 @@
           </div>
 
           <!-- CHAT -->
-          <div class="r-card">
+          <div class="r-card rg-chat">
             <div class="r-card-title">💬 Chat en vivo</div>
             <div class="chat-messages" id="chatMessages">
               <span class="chat-empty">Sé el primero en escribir...</span>
@@ -448,7 +469,7 @@
           </div>
 
           <!-- NOTICIAS -->
-          <div class="r-card">
+          <div class="r-card rg-news">
             <div class="r-card-title">📰 Noticias</div>
             <div id="noticiasContent"><div class="ep-empty">Cargando...</div></div>
           </div>
@@ -459,19 +480,19 @@
         <div class="radio-col-right">
 
           <!-- CLIMA -->
-          <div class="r-card">
+          <div class="r-card rg-clima">
             <div class="r-card-title">🌤️ Clima</div>
             <div id="climaContent"><div class="ep-empty">Cargando...</div></div>
           </div>
 
           <!-- DÓLAR -->
-          <div class="r-card">
+          <div class="r-card rg-dolar">
             <div class="r-card-title">💵 Dólar hoy</div>
             <div id="dolarContent"><div class="ep-empty">Cargando...</div></div>
           </div>
 
           <!-- DONACIONES -->
-          <div class="r-card">
+          <div class="r-card rg-donate">
             <div class="r-card-title">💜 Apoyá la radio</div>
             <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">
               Tu donación nos ayuda a mantener la radio al aire y mejorar la programación.
@@ -489,7 +510,7 @@
           </div>
 
           <!-- WHATSAPP -->
-          <div class="r-card">
+          <div class="r-card rg-wa">
             <div class="r-card-title">📱 Contacto directo</div>
             <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
               ¿Querés pedir un tema, hacer un saludo o publicitar en la radio?
